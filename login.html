@@ -35,7 +35,6 @@
         }
         .btn-prime:disabled { opacity: 0.5; cursor: not-allowed; }
         
-        /* Toast Notification */
         #toast {
             position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px);
             background: rgba(20, 20, 30, 0.9); border: 1px solid var(--main-blue);
@@ -43,15 +42,12 @@
             display: flex; align-items: center; gap: 10px; pointer-events: none; opacity: 0;
         }
         #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-
         .hidden { display: none; }
     </style>
 </head>
 <body>
 
-    <!-- التنبيه الاحترافي -->
     <div id="toast">
-        <div id="toastIcon" class="text-blue-500"></div>
         <span id="toastMsg" class="text-sm font-bold"></span>
     </div>
 
@@ -60,30 +56,33 @@
             <h1 class="font-['Orbitron'] text-4xl font-black italic uppercase">Prime<span class="text-blue-600">Logic</span></h1>
         </div>
 
-        <!-- تبديل الصفحات -->
-        <div class="flex justify-around mb-8 border-b border-white/5">
+        <div id="tabsHeader" class="flex justify-around mb-8 border-b border-white/5">
             <button onclick="switchTab('login')" id="loginTab" class="tab-btn active pb-3 px-6 font-bold">دخول</button>
             <button onclick="switchTab('register')" id="regTab" class="tab-btn pb-3 px-6 font-bold">حساب جديد</button>
         </div>
 
-        <!-- فورم تسجيل الدخول -->
-        <div id="loginSection" class="space-y-5">
-            <input type="tel" id="loginPhone" class="input-prime" placeholder="رقم الهاتف (2010xxxxxxxx)" dir="ltr">
-            <button onclick="handleLogin()" id="loginBtn" class="btn-prime shadow-lg shadow-blue-900/20">دخول السيرفر</button>
-        </div>
+        <!-- قسم الإدخال الرئيسي (موبايل / اسم) -->
+        <div id="inputSection" class="space-y-5">
+            <!-- الدخول -->
+            <div id="loginFields" class="space-y-5">
+                <input type="tel" id="loginPhone" class="input-prime" placeholder="رقم الهاتف (2010xxxxxxxx)" dir="ltr">
+                <button onclick="handleLogin()" id="loginBtn" class="btn-prime shadow-lg shadow-blue-900/20">طلب كود الدخول</button>
+            </div>
 
-        <!-- فورم التسجيل (مقسم لخطوتين) -->
-        <div id="registerSection" class="hidden space-y-5">
-            <div id="regInfo" class="space-y-5">
+            <!-- التسجيل -->
+            <div id="registerFields" class="hidden space-y-5">
                 <input type="text" id="regName" class="input-prime" placeholder="الاسم الكامل">
                 <input type="tel" id="regPhone" class="input-prime" placeholder="رقم الواتساب (2010xxxxxxxx)" dir="ltr">
-                <button onclick="sendOTP()" id="sendBtn" class="btn-prime shadow-lg shadow-blue-900/20">إرسال كود التفعيل</button>
+                <button onclick="sendOTP('register')" id="sendBtn" class="btn-prime shadow-lg shadow-blue-900/20">إرسال كود التفعيل</button>
             </div>
+        </div>
 
-            <div id="regOTP" class="hidden space-y-5">
-                <input type="text" id="otpInput" class="input-prime text-2xl tracking-[8px]" placeholder="000000" maxlength="6">
-                <button onclick="verifyOTP()" id="verifyBtn" class="btn-prime">تأكيد وتفعيل الـ 7 أيام</button>
-            </div>
+        <!-- قسم التحقق من الكود (OTP) -->
+        <div id="otpSection" class="hidden space-y-5 text-center">
+            <p class="text-blue-400 text-sm mb-2">أدخل الكود المرسل للواتساب</p>
+            <input type="text" id="otpInput" class="input-prime text-2xl tracking-[8px]" placeholder="000000" maxlength="6">
+            <button id="verifyBtn" class="btn-prime">تأكيد الكود</button>
+            <button onclick="resetFlow()" class="text-xs text-white/30 underline mt-4">تغيير الرقم</button>
         </div>
 
         <div class="mt-10 text-center opacity-10">
@@ -111,117 +110,127 @@
         const TOKEN = "5fh5hfytsg5mml9n";
 
         let generatedOTP = "";
-        let tempPhone = "";
-        let tempName = "";
+        let currentPhone = "";
+        let currentName = "";
+        let flowMode = ""; // 'login' or 'register'
 
-        // نظام التنبيهات
         window.notify = (msg, type = 'info') => {
             const toast = document.getElementById('toast');
             document.getElementById('toastMsg').innerText = msg;
             toast.className = 'show'; 
-            if(type === 'error') toast.style.borderColor = '#ef4444';
-            else toast.style.borderColor = '#007bff';
+            toast.style.borderColor = (type === 'error') ? '#ef4444' : '#007bff';
             setTimeout(() => toast.className = '', 3000);
         };
 
-        // التبديل بين الدخول والتسجيل
         window.switchTab = (tab) => {
+            resetFlow();
             if(tab === 'login') {
-                document.getElementById('loginSection').classList.remove('hidden');
-                document.getElementById('registerSection').classList.add('hidden');
+                document.getElementById('loginFields').classList.remove('hidden');
+                document.getElementById('registerFields').classList.add('hidden');
                 document.getElementById('loginTab').classList.add('active');
                 document.getElementById('regTab').classList.remove('active');
             } else {
-                document.getElementById('loginSection').classList.add('hidden');
-                document.getElementById('registerSection').classList.remove('hidden');
+                document.getElementById('loginFields').classList.add('hidden');
+                document.getElementById('registerFields').classList.remove('hidden');
                 document.getElementById('loginTab').classList.remove('active');
                 document.getElementById('regTab').classList.add('active');
             }
         };
 
-        // تسجيل الدخول
-        window.handleLogin = async () => {
-            const phone = document.getElementById('loginPhone').value.trim();
-            if(!phone) return notify("أدخل رقم الهاتف", "error");
-            
-            const formattedPhone = phone.startsWith('20') ? phone : '20' + phone.replace(/^0+/, '');
-            const loginBtn = document.getElementById('loginBtn');
-            loginBtn.disabled = true;
-
-            const snap = await getDoc(doc(db, "users", formattedPhone));
-            if(snap.exists()) {
-                localStorage.setItem('prime_user_phone', formattedPhone);
-                notify("تم تسجيل الدخول بنجاح.. جاري التوجيه");
-                setTimeout(() => window.location.href = 'index.html', 1500);
-            } else {
-                notify("هذا الرقم غير مسجل، أنشئ حساباً أولاً", "error");
-                loginBtn.disabled = false;
-            }
+        window.resetFlow = () => {
+            document.getElementById('inputSection').classList.remove('hidden');
+            document.getElementById('otpSection').classList.add('hidden');
+            document.getElementById('tabsHeader').style.opacity = "1";
+            document.getElementById('tabsHeader').style.pointerEvents = "auto";
         };
 
-        // إرسال OTP مع التحقق من الرقم
-        window.sendOTP = async () => {
-            tempName = document.getElementById('regName').value.trim();
-            tempPhone = document.getElementById('regPhone').value.trim();
-            if(!tempName || !tempPhone) return notify("أكمل البيانات أولاً", "error");
-
-            const formattedPhone = tempPhone.startsWith('20') ? tempPhone : '20' + tempPhone.replace(/^0+/, '');
-            tempPhone = formattedPhone;
-
-            const sendBtn = document.getElementById('sendBtn');
-            sendBtn.disabled = true;
-
-            // التأكد أن الرقم جديد
-            const snap = await getDoc(doc(db, "users", formattedPhone));
-            if(snap.exists()) {
-                notify("هذا الرقم مسجل بالفعل!", "error");
-                sendBtn.disabled = false;
-                return;
-            }
-
+        // دالة إرسال الـ OTP الموحدة
+        window.sendOTP = async (mode, phone, name = "") => {
             generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
+            flowMode = mode;
+            currentPhone = phone;
+            currentName = name;
+
             const params = new URLSearchParams({
-                "token": TOKEN, "to": formattedPhone,
-                "body": `*PRIME LOGIC*\nكود التفعيل الخاص بك: *${generatedOTP}*`
+                "token": TOKEN, "to": phone,
+                "body": `*PRIME LOGIC*\nكود التحقق الخاص بك هو: *${generatedOTP}*`
             });
 
             try {
                 await fetch(API_URL, { method: 'POST', body: params });
-                notify("تم إرسال كود التفعيل للواتساب");
-                document.getElementById('regInfo').classList.add('hidden');
-                document.getElementById('regOTP').classList.remove('hidden');
+                notify("تم إرسال الكود للواتساب");
+                
+                document.getElementById('inputSection').classList.add('hidden');
+                document.getElementById('otpSection').classList.remove('hidden');
+                document.getElementById('tabsHeader').style.opacity = "0.3";
+                document.getElementById('tabsHeader').style.pointerEvents = "none";
+                
+                document.getElementById('verifyBtn').onclick = window.completeProcess;
             } catch (e) {
-                notify("خطأ في الإرسال، حاول لاحقاً", "error");
-                sendBtn.disabled = false;
+                notify("خطأ في الاتصال بالخادم", "error");
             }
         };
 
-        // التحقق النهائي
-        window.verifyOTP = async () => {
+        window.handleLogin = async () => {
+            const phone = document.getElementById('loginPhone').value.trim();
+            if(!phone) return notify("أدخل رقم الهاتف", "error");
+            const formattedPhone = phone.startsWith('20') ? phone : '20' + phone.replace(/^0+/, '');
+            
+            const btn = document.getElementById('loginBtn');
+            btn.disabled = true;
+
+            const snap = await getDoc(doc(db, "users", formattedPhone));
+            if(snap.exists()) {
+                await window.sendOTP('login', formattedPhone);
+            } else {
+                notify("الرقم غير مسجل، أنشئ حساباً أولاً", "error");
+                btn.disabled = false;
+            }
+        };
+
+        window.sendBtnClick = async () => {
+            const name = document.getElementById('regName').value.trim();
+            const phone = document.getElementById('regPhone').value.trim();
+            if(!name || !phone) return notify("أكمل البيانات", "error");
+            
+            const formattedPhone = phone.startsWith('20') ? phone : '20' + phone.replace(/^0+/, '');
+            
+            const btn = document.getElementById('sendBtn');
+            btn.disabled = true;
+
+            const snap = await getDoc(doc(db, "users", formattedPhone));
+            if(snap.exists()) {
+                notify("الرقم مسجل بالفعل!", "error");
+                btn.disabled = false;
+            } else {
+                await window.sendOTP('register', formattedPhone, name);
+            }
+        };
+        // ربط زر التسجيل بالدالة
+        document.getElementById('sendBtn').onclick = window.sendBtnClick;
+
+        window.completeProcess = async () => {
             const input = document.getElementById('otpInput').value;
             if(input !== generatedOTP) return notify("الكود غير صحيح", "error");
 
             const verifyBtn = document.getElementById('verifyBtn');
             verifyBtn.disabled = true;
 
-            const trialEndDate = new Date();
-            trialEndDate.setDate(trialEndDate.getDate() + 7); // إضافة 7 أيام مجانية
-
-            try {
-                await setDoc(doc(db, "users", tempPhone), {
-                    name: tempName, phone: tempPhone,
-                    customId: `PL-${Math.floor(1000+Math.random()*8999)}`,
-                    isOldUser: false, // لمنع تكرار الهدايا
-                    trial_end: Timestamp.fromDate(trialEndDate),
-                    createdAt: serverTimestamp()
-                });
-                localStorage.setItem('prime_user_phone', tempPhone);
-                notify("مبروك! تم تفعيل الـ 7 أيام");
-                setTimeout(() => window.location.href = 'index.html', 1500);
-            } catch (e) {
-                notify("خطأ في حفظ البيانات", "error");
-                verifyBtn.disabled = false;
+            if(flowMode === 'register') {
+                const trialEndDate = new Date();
+                trialEndDate.setDate(trialEndDate.getDate() + 7);
+                try {
+                    await setDoc(doc(db, "users", currentPhone), {
+                        name: currentName, phone: currentPhone,
+                        trial_end: Timestamp.fromDate(trialEndDate),
+                        createdAt: serverTimestamp()
+                    });
+                } catch(e) { return notify("خطأ في القاعدة", "error"); }
             }
+
+            localStorage.setItem('prime_user_phone', currentPhone);
+            notify("تم التحقق بنجاح.. جاري الدخول");
+            setTimeout(() => window.location.href = 'index.html', 1500);
         };
     </script>
 </body>
