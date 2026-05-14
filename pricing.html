@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prime Logic | خطط الاشتراك</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root { --accent: #00d2ff; --bg: #050508; }
+        body { background-color: var(--bg); color: #fff; font-family: 'Cairo', sans-serif; margin: 0; }
+        .glass-card { background: rgba(15, 15, 25, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.05); transition: 0.4s; height: 100%; display: flex; flex-direction: column; }
+        .glass-card:hover { border-color: var(--accent); transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0, 210, 255, 0.1); }
+        .king-border { border: 2px solid #ffd700; position: relative; }
+        .king-tag { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: #ffd700; color: #000; font-weight: 900; padding: 4px 20px; border-radius: 20px; font-size: 12px; text-transform: uppercase; }
+        .price-font { font-family: 'Orbitron', sans-serif; }
+    </style>
+</head>
+<body class="py-12 px-6">
+
+    <div class="max-w-6xl mx-auto text-center mb-16">
+        <h1 class="text-4xl md:text-5xl font-black mb-4 font-[Orbitron] italic uppercase text-white">Upgrade Your <span class="text-blue-500">Trading</span></h1>
+        <p class="text-gray-400 max-w-xl mx-auto text-sm">اختر الباقة المناسبة لك وانضم لنخبة المتداولين في Prime Logic. نظام ذكي، إشارات دقيقة، وأرباح مستمرة.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        
+        <!-- الباقة العادية -->
+        <div class="glass-card p-8 rounded-[2.5rem]">
+            <h3 class="text-xl font-bold mb-2">الباقة العادية</h3>
+            <p class="text-gray-500 text-xs mb-6">مثالية للمبتدئين في السوق</p>
+            <div class="price-font text-4xl font-black mb-8 text-white">400<span class="text-sm text-gray-500 font-sans"> ج.م/شهرياً</span></div>
+            <ul class="text-right space-y-4 mb-10 flex-1 text-sm">
+                <li class="flex items-center gap-3"><i class="fas fa-check-circle text-blue-500"></i> اشتراك لمدة شهر كامل</li>
+                <li class="flex items-center gap-3"><i class="fas fa-check-circle text-blue-500"></i> إشارات الذهب والعملات</li>
+                <li class="flex items-center gap-3"><i class="fas fa-check-circle text-blue-500"></i> تحديثات حية للشارت</li>
+            </ul>
+            <button onclick="subscribe('العادية (شهر)')" class="w-full py-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all font-bold">اشترك الآن</button>
+        </div>
+
+        <!-- باقة بلس -->
+        <div class="glass-card p-8 rounded-[2.5rem] border-blue-500/50 shadow-xl shadow-blue-500/5">
+            <h3 class="text-xl font-bold mb-2 text-blue-400">باقة بلس (PLUS)</h3>
+            <p class="text-gray-500 text-xs mb-6">التوازن المثالي بين السعر والمدة</p>
+            <div class="price-font text-4xl font-black mb-8 text-white">999<span class="text-sm text-gray-500 font-sans"> ج.م/3 شهور</span></div>
+            <ul class="text-right space-y-4 mb-10 flex-1 text-sm">
+                <li class="flex items-center gap-3"><i class="fas fa-check-circle text-blue-500"></i> اشتراك لمدة 3 شهور</li>
+                <li class="flex items-center gap-3"><i class="fas fa-check-circle text-blue-500"></i> توفير أكثر من 200 جنيه</li>
+                <li class="flex items-center gap-3"><i class="fas fa-check-circle text-blue-500"></i> إشارات فائقة الدقة</li>
+                <li class="flex items-center gap-3"><i class="fas fa-check-circle text-blue-500"></i> دعم فني مخصص</li>
+            </ul>
+            <button onclick="subscribe('بلس (3 شهور)')" class="w-full py-4 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-600/20 transition-all font-bold">اشترك الآن</button>
+        </div>
+
+        <!-- الباقة الكينج -->
+        <div class="glass-card p-8 rounded-[2.5rem] king-border shadow-2xl shadow-yellow-500/5">
+            <div class="king-tag text-black font-black">THE KING</div>
+            <h3 class="text-xl font-bold mb-2 text-yellow-500">الباقة الكينج</h3>
+            <p class="text-gray-500 text-xs mb-6">للمحترفين والمستثمرين الكبار</p>
+            <div class="price-font text-4xl font-black mb-8 text-white">1900<span class="text-sm text-gray-500 font-sans"> ج.م/6 شهور</span></div>
+            <ul class="text-right space-y-4 mb-10 flex-1 text-sm">
+                <li class="flex items-center gap-3"><i class="fas fa-crown text-yellow-500"></i> اشتراك لمدة 6 شهور</li>
+                <li class="flex items-center gap-3"><i class="fas fa-check-circle text-yellow-500"></i> توفير هائل (أفضل قيمة)</li>
+                <li class="flex items-center gap-3"><i class="fas fa-check-circle text-yellow-500"></i> توصيات خاصة وتحليل عميق</li>
+                <li class="flex items-center gap-3"><i class="fas fa-check-circle text-yellow-500"></i> أولوية في الدعم الفني</li>
+            </ul>
+            <button onclick="subscribe('الكينج (6 شهور)')" class="w-full py-4 rounded-2xl bg-yellow-600 hover:bg-yellow-500 text-black font-black transition-all">اشترك الآن</button>
+        </div>
+
+    </div>
+
+    <div class="mt-20 text-center opacity-20">
+        <p class="text-[9px] tracking-[6px] uppercase font-bold">Fixaa Arab Enterprise Solution</p>
+    </div>
+
+    <script>
+        function subscribe(plan) {
+            const myPhone = "201064170259"; // رقمك يا أحمد
+            const userName = localStorage.getItem('prime_user_name') || 'عميل جديد';
+            const message = `أهلاً يا أحمد، أنا ${userName}. أرغب في تفعيل اشتراك Prime Logic: باقة ${plan}.`;
+            const url = `https://wa.me/${myPhone}?text=${encodeURIComponent(message)}`;
+            window.open(url, '_blank');
+        }
+    </script>
+</body>
+</html>
