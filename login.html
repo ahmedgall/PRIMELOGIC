@@ -28,6 +28,15 @@
             padding: 1.1rem; border-radius: 1.2rem; width: 100%; text-align: center; color: white; transition: 0.4s;
         }
         .input-prime:focus { border-color: var(--main-blue); outline: none; background: rgba(0, 123, 255, 0.05); }
+        
+        /* تنسيق قائمة اختيار الدولة */
+        .select-prime {
+            background: rgba(20, 20, 25, 0.95); border: 1px solid rgba(0, 123, 255, 0.1); 
+            color: white; padding: 0 1rem; border-radius: 1.2rem; outline: none;
+            cursor: pointer; font-weight: bold; font-size: 0.9rem; text-align: center;
+        }
+        .select-prime option { background: #0a0a0f; color: white; }
+
         .btn-prime { 
             background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
             color: white; font-weight: 700; padding: 1.1rem; border-radius: 1.2rem; 
@@ -61,23 +70,47 @@
             <button onclick="switchTab('register')" id="regTab" class="tab-btn pb-3 px-6 font-bold">حساب جديد</button>
         </div>
 
-        <!-- قسم الإدخال الرئيسي (موبايل / اسم) -->
         <div id="inputSection" class="space-y-5">
-            <!-- الدخول -->
             <div id="loginFields" class="space-y-5">
-                <input type="tel" id="loginPhone" class="input-prime" placeholder="رقم الهاتف (2010xxxxxxxx)" dir="ltr">
+                <div class="flex gap-2" dir="ltr">
+                    <select id="loginCountry" class="select-prime">
+                        <option value="20">🇪🇬 +20</option>
+                        <option value="964">🇮🇶 +964</option>
+                        <option value="966">🇸🇦 +966</option>
+                        <option value="971">🇦🇪 +971</option>
+                        <option value="965">🇰🇼 +965</option>
+                        <option value="974">🇶🇦 +974</option>
+                        <option value="968">🇴🇲 +968</option>
+                        <option value="962">🇯🇴 +962</option>
+                        <option value="973">🇧🇭 +973</option>
+                        <option value="212">🇲🇦 +212</option>
+                    </select>
+                    <input type="tel" id="loginPhone" class="input-prime flex-1" placeholder="رقم الهاتف بدون أصفار في الأول" dir="ltr">
+                </div>
                 <button onclick="handleLogin()" id="loginBtn" class="btn-prime shadow-lg shadow-blue-900/20">طلب كود الدخول</button>
             </div>
 
-            <!-- التسجيل -->
             <div id="registerFields" class="hidden space-y-5">
                 <input type="text" id="regName" class="input-prime" placeholder="الاسم الكامل">
-                <input type="tel" id="regPhone" class="input-prime" placeholder="رقم الواتساب (2010xxxxxxxx)" dir="ltr">
-                <button onclick="sendOTP('register')" id="sendBtn" class="btn-prime shadow-lg shadow-blue-900/20">إرسال كود التفعيل</button>
+                <div class="flex gap-2" dir="ltr">
+                    <select id="regCountry" class="select-prime">
+                        <option value="20">🇪🇬 +20</option>
+                        <option value="964">🇮🇶 +964</option>
+                        <option value="966">🇸🇦 +966</option>
+                        <option value="971">🇦🇪 +971</option>
+                        <option value="965">🇰🇼 +965</option>
+                        <option value="974">🇶🇦 +974</option>
+                        <option value="968">🇴🇲 +968</option>
+                        <option value="962">🇯🇴 +962</option>
+                        <option value="973">🇧🇭 +973</option>
+                        <option value="212">🇲🇦 +212</option>
+                    </select>
+                    <input type="tel" id="regPhone" class="input-prime flex-1" placeholder="رقم الواتساب بدون أصفار في الأول" dir="ltr">
+                </div>
+                <button onclick="sendBtnClick()" id="sendBtn" class="btn-prime shadow-lg shadow-blue-900/20">إرسال كود التفعيل</button>
             </div>
         </div>
 
-        <!-- قسم التحقق من الكود (OTP) -->
         <div id="otpSection" class="hidden space-y-5 text-center">
             <p class="text-blue-400 text-sm mb-2">أدخل الكود المرسل للواتساب</p>
             <input type="text" id="otpInput" class="input-prime text-2xl tracking-[8px]" placeholder="000000" maxlength="6">
@@ -112,7 +145,7 @@
         let generatedOTP = "";
         let currentPhone = "";
         let currentName = "";
-        let flowMode = ""; // 'login' or 'register'
+        let flowMode = ""; 
 
         window.notify = (msg, type = 'info') => {
             const toast = document.getElementById('toast');
@@ -142,9 +175,23 @@
             document.getElementById('otpSection').classList.add('hidden');
             document.getElementById('tabsHeader').style.opacity = "1";
             document.getElementById('tabsHeader').style.pointerEvents = "auto";
+            if(document.getElementById('loginBtn')) document.getElementById('loginBtn').disabled = false;
+            if(document.getElementById('sendBtn')) document.getElementById('sendBtn').disabled = false;
         };
 
-        // دالة إرسال الـ OTP الموحدة
+        // دالة تنظيف الرقم ودمجه مع كود الدولة بشكل دولي صحيح
+        function formatInternationalPhone(countryCode, inputPhone) {
+            let cleanPhone = inputPhone.replace(/\D/g, ''); // إزالة أي رموز أو مسافات
+            cleanPhone = cleanPhone.replace(/^0+/, ''); // إزالة الصفر أو الأصفار التي في بداية الرقم المكتوب
+            
+            // إذا كان المستخدم كاتب كود الدولة يدوي في الخانة، بنشيله عشان ميتكررش
+            if (cleanPhone.startsWith(countryCode)) {
+                cleanPhone = cleanPhone.substring(countryCode.length);
+            }
+            
+            return countryCode + cleanPhone;
+        }
+
         window.sendOTP = async (mode, phone, name = "") => {
             generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
             flowMode = mode;
@@ -157,7 +204,9 @@
             });
 
             try {
-                await fetch(API_URL, { method: 'POST', body: params });
+                const response = await fetch(API_URL, { method: 'POST', body: params });
+                if(!response.ok) throw new Error("UltraMsg Fail");
+                
                 notify("تم إرسال الكود للواتساب");
                 
                 document.getElementById('inputSection').classList.add('hidden');
@@ -167,47 +216,60 @@
                 
                 document.getElementById('verifyBtn').onclick = window.completeProcess;
             } catch (e) {
-                notify("خطأ في الاتصال بالخادم", "error");
+                notify("خطأ في إرسال رسالة الواتساب", "error");
+                resetFlow();
             }
         };
 
         window.handleLogin = async () => {
-            const phone = document.getElementById('loginPhone').value.trim();
-            if(!phone) return notify("أدخل رقم الهاتف", "error");
-            const formattedPhone = phone.startsWith('20') ? phone : '20' + phone.replace(/^0+/, '');
+            const countryCode = document.getElementById('loginCountry').value;
+            const phoneInput = document.getElementById('loginPhone').value.trim();
+            if(!phoneInput) return notify("أدخل رقم الهاتف", "error");
+            
+            const formattedPhone = formatInternationalPhone(countryCode, phoneInput);
             
             const btn = document.getElementById('loginBtn');
             btn.disabled = true;
 
-            const snap = await getDoc(doc(db, "users", formattedPhone));
-            if(snap.exists()) {
-                await window.sendOTP('login', formattedPhone);
-            } else {
-                notify("الرقم غير مسجل، أنشئ حساباً أولاً", "error");
+            try {
+                const snap = await getDoc(doc(db, "users", formattedPhone));
+                if(snap.exists()) {
+                    await window.sendOTP('login', formattedPhone);
+                } else {
+                    notify("الرقم غير مسجل، أنشئ حساباً أولاً", "error");
+                    btn.disabled = false;
+                }
+            } catch(e) {
+                notify("خطأ في الاتصال بالسيرفر", "error");
                 btn.disabled = false;
             }
         };
 
         window.sendBtnClick = async () => {
             const name = document.getElementById('regName').value.trim();
-            const phone = document.getElementById('regPhone').value.trim();
-            if(!name || !phone) return notify("أكمل البيانات", "error");
+            const countryCode = document.getElementById('regCountry').value;
+            const phoneInput = document.getElementById('regPhone').value.trim();
             
-            const formattedPhone = phone.startsWith('20') ? phone : '20' + phone.replace(/^0+/, '');
+            if(!name || !phoneInput) return notify("أكمل البيانات", "error");
+            
+            const formattedPhone = formatInternationalPhone(countryCode, phoneInput);
             
             const btn = document.getElementById('sendBtn');
             btn.disabled = true;
 
-            const snap = await getDoc(doc(db, "users", formattedPhone));
-            if(snap.exists()) {
-                notify("الرقم مسجل بالفعل!", "error");
+            try {
+                const snap = await getDoc(doc(db, "users", formattedPhone));
+                if(snap.exists()) {
+                    notify("الرقم مسجل بالفعل!", "error");
+                    btn.disabled = false;
+                } else {
+                    await window.sendOTP('register', formattedPhone, name);
+                }
+            } catch(e) {
+                notify("خطأ في فحص البيانات", "error");
                 btn.disabled = false;
-            } else {
-                await window.sendOTP('register', formattedPhone, name);
             }
         };
-        // ربط زر التسجيل بالدالة
-        document.getElementById('sendBtn').onclick = window.sendBtnClick;
 
         window.completeProcess = async () => {
             const input = document.getElementById('otpInput').value;
@@ -225,7 +287,10 @@
                         trial_end: Timestamp.fromDate(trialEndDate),
                         createdAt: serverTimestamp()
                     });
-                } catch(e) { return notify("خطأ في القاعدة", "error"); }
+                } catch(e) { 
+                    verifyBtn.disabled = false;
+                    return notify("خطأ في حفظ البيانات بقاعدة البيانات", "error"); 
+                }
             }
 
             localStorage.setItem('prime_user_phone', currentPhone);
@@ -235,3 +300,4 @@
     </script>
 </body>
 </html>
+
