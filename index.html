@@ -36,8 +36,17 @@
         .lock-overlay.active { display: flex; }
     </style>
 </head>
-<body class="antialiased">
 
+    
+    
+    
+    
+    
+    <body class="antialiased">
+
+
+
+    
     <div id="overlay" onclick="toggleSidebar()"></div>
     <div id="flying7" class="flying-seven">7</div>
 
@@ -363,6 +372,39 @@ function logout() {
     
 </script>
 
+
+
+
+
+<script>
+
+// فرضاً إن الـ HTML element بتاع التنبيه واخد id="market-alert"
+const alertElement = document.getElementById('market-alert');
+
+function updateMarketStatus(directionStrength) {
+    if (directionStrength < 60) {
+        // إظهار التنبيه وتحذير المستخدم
+        alertElement.innerHTML = `⚠️ مخاطرة: تجنب الإشارات الأقل من 60%`;
+        alertElement.style.color = `#ff4a4a`; // لون أحمر متناسق مع ثيم الموقع
+        alertElement.style.display = `block`;
+    } else {
+        // إخفاء التنبيه أو تبديله برسالة أمان
+        alertElement.innerHTML = `✅ اتجاه قوي: الإشارة مدعومة بالسوق`;
+        alertElement.style.color = `#00e676`; // لون أخضر نيوني
+        // لو مش عايز تظهر حاجة خالص والنسبة مأمنة فكك من السطر اللي فوق واعملها hide:
+        // alertElement.style.display = `none`;
+    }
+}
+
+// مثال للتشغيل عند التحديث:
+updateMarketStatus(56); // النسبة الحالية في صورتك 56% فهتظهر التحذير فوراً
+
+
+    
+</script>
+
+
+        
 </body>
 </html>
 
