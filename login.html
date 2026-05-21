@@ -107,6 +107,7 @@
                     </select>
                     <input type="tel" id="regPhone" class="input-prime flex-1" placeholder="رقم الواتساب بدون أصفار في الأول" dir="ltr">
                 </div>
+                <input type="text" id="regPromo" class="input-prime border-dashed border-blue-500/30" placeholder="كود الإحالة / رقم التليفون الداعي (اختياري)" dir="ltr">
                 <button onclick="sendBtnClick()" id="sendBtn" class="btn-prime shadow-lg shadow-blue-900/20">إرسال كود التفعيل</button>
             </div>
         </div>
@@ -145,6 +146,7 @@
         let generatedOTP = "";
         let currentPhone = "";
         let currentName = "";
+        let currentPromo = ""; // لتخزين كود الإحالة الموثق أثناء العملية
         let flowMode = ""; 
 
         window.notify = (msg, type = 'info') => {
@@ -179,12 +181,10 @@
             if(document.getElementById('sendBtn')) document.getElementById('sendBtn').disabled = false;
         };
 
-        // دالة تنظيف الرقم ودمجه مع كود الدولة بشكل دولي صحيح
         function formatInternationalPhone(countryCode, inputPhone) {
-            let cleanPhone = inputPhone.replace(/\D/g, ''); // إزالة أي رموز أو مسافات
-            cleanPhone = cleanPhone.replace(/^0+/, ''); // إزالة الصفر أو الأصفار التي في بداية الرقم المكتوب
+            let cleanPhone = inputPhone.replace(/\D/g, ''); 
+            cleanPhone = cleanPhone.replace(/^0+/, ''); 
             
-            // إذا كان المستخدم كاتب كود الدولة يدوي في الخانة، بنشيله عشان ميتكررش
             if (cleanPhone.startsWith(countryCode)) {
                 cleanPhone = cleanPhone.substring(countryCode.length);
             }
@@ -192,11 +192,13 @@
             return countryCode + cleanPhone;
         }
 
-        window.sendOTP = async (mode, phone, name = "") => {
+        // تمرير متغير الـ promo للدالة لتجهيزه قبل الحفظ
+        window.sendOTP = async (mode, phone, name = "", promo = "") => {
             generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
             flowMode = mode;
             currentPhone = phone;
             currentName = name;
+            currentPromo = promo;
 
             const params = new URLSearchParams({
                 "token": TOKEN, "to": phone,
@@ -249,6 +251,7 @@
             const name = document.getElementById('regName').value.trim();
             const countryCode = document.getElementById('regCountry').value;
             const phoneInput = document.getElementById('regPhone').value.trim();
+            let promoInput = document.getElementById('regPromo').value.trim();
             
             if(!name || !phoneInput) return notify("أكمل البيانات", "error");
             
@@ -258,13 +261,56 @@
             btn.disabled = true;
 
             try {
+                // 1. فحص هل التليفون مسجل قبل كده
                 const snap = await getDoc(doc(db, "users", formattedPhone));
                 if(snap.exists()) {
                     notify("الرقم مسجل بالفعل!", "error");
                     btn.disabled = false;
-                } else {
-                    await window.sendOTP('register', formattedPhone, name);
+                    return;
                 }
+
+                // 2. الـ Logic الجديد: فحص برومو كود الإحالة لو موجود
+                let validPromo = "";
+                if(promoInput) {
+                    // تنظيف البرومو كود تحسباً لو دخل رقم عادي مش دولي، السيستم ينظفه تلقائي
+                    let cleanPromo = promoInput.replace(/\D/g, '').replace(/^0+/, '');
+                    
+                    // التحقق لو كتب رقمه الشخصي كإحالة
+                    if(cleanPromo === phoneInput.replace(/\D/g, '').replace(/^0+/, '') || cleanPromo === formattedPhone) {
+                        notify("لا يمكنك استخدام رقمك ككود إحالة!", "error");
+                        btn.disabled = false;
+                        return;
+                    }
+
+                    // البحث في الداتابيز: هل الكود (رقم الداعي) موجود؟
+                    // بنجرب نبحث عنه بالـ formattedPhone النظيف أو كـ ID مباشر في Firestore
+                    let promoFound = false;
+                    const promoSnap = await getDoc(doc(db, "users", cleanPromo));
+                    
+                    if (promoSnap.exists()) {
+                        validPromo = cleanPromo;
+                        promoFound = true;
+                    } else {
+                        // محاولة فحص لو الكود مخزن بـ مفتاح دولي كاملا بـ 20 أو غيره
+                        // بنلف على الاحتمالات الشائعة كود مصر أو المدخل الحالي
+                        const fallbackPromo = cleanPromo.startsWith(countryCode) ? cleanPromo : countryCode + cleanPromo;
+                        const promoSnapFallback = await getDoc(doc(db, "users", fallbackPromo));
+                        if(promoSnapFallback.exists()) {
+                            validPromo = fallbackPromo;
+                            promoFound = true;
+                        }
+                    }
+
+                    if(!promoFound) {
+                        notify("كود الإحالة غير صحيح أو غير موجود", "error");
+                        btn.disabled = false;
+                        return;
+                    }
+                }
+
+                // إرسال البيانات للدالة لبدء الـ OTP
+                await window.sendOTP('register', formattedPhone, name, validPromo);
+
             } catch(e) {
                 notify("خطأ في فحص البيانات", "error");
                 btn.disabled = false;
@@ -272,7 +318,7 @@
         };
 
         window.completeProcess = async () => {
-            const input = document.getElementById('otpInput').value;
+            const input = document.getElementById('otpInput').value.trim();
             if(input !== generatedOTP) return notify("الكود غير صحيح", "error");
 
             const verifyBtn = document.getElementById('verifyBtn');
@@ -280,10 +326,19 @@
 
             if(flowMode === 'register') {
                 const trialEndDate = new Date();
-                trialEndDate.setDate(trialEndDate.getDate() + 7);
+                
+                // الـ Logic المكافأة: لو مسجل بكود إحالة صحيح ياخد 14 يوم، لو عادي 7 أيام
+                if(currentPromo) {
+                    trialEndDate.setDate(trialEndDate.getDate() + 14);
+                } else {
+                    trialEndDate.setDate(trialEndDate.getDate() + 7);
+                }
+
                 try {
                     await setDoc(doc(db, "users", currentPhone), {
-                        name: currentName, phone: currentPhone,
+                        name: currentName, 
+                        phone: currentPhone,
+                        referred_by: currentPromo ? currentPromo : null, // ربط الحساب بصاحب الإحالة
                         trial_end: Timestamp.fromDate(trialEndDate),
                         createdAt: serverTimestamp()
                     });
@@ -294,10 +349,9 @@
             }
 
             localStorage.setItem('prime_user_phone', currentPhone);
-            notify("تم التحقق بنجاح.. جاري الدخول");
+            notify(currentPromo ? "تم التفعيل بنجاح! حصلت على 14 يوم تجريبي 🎉" : "تم التحقق بنجاح.. جاري الدخول");
             setTimeout(() => window.location.href = 'index.html', 1500);
         };
     </script>
 </body>
 </html>
-
