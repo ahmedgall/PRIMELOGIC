@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prime Logic | نظام الإحالات والمكافآت</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Orbitron:wght@400;900&display=swap" rel="stylesheet">
+    <style>
+        :root { --main-blue: #007bff; --dark-bg: #030303; }
+        body { 
+            font-family: 'Cairo', sans-serif; 
+            background-color: var(--dark-bg);
+            background-image: radial-gradient(circle at top right, #0b1a36 0%, #030303 50%);
+            color: #ffffff; min-height: 100vh; margin: 0; overflow-x: hidden;
+        }
+        .prime-card { 
+            background: rgba(10, 10, 10, 0.6); backdrop-filter: blur(30px); 
+            border: 1px solid rgba(0, 123, 255, 0.15); border-radius: 2rem; 
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+        }
+        .progress-bar { transition: width 0.5s ease-in-out; }
+        .input-prime { 
+            background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(0, 123, 255, 0.1); 
+            padding: 1rem; border-radius: 1rem; width: 100%; text-align: center; color: white;
+        }
+        .input-prime:focus { border-color: var(--main-blue); outline: none; background: rgba(0, 123, 255, 0.05); }
+        .btn-prime { 
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            color: white; font-weight: 700; padding: 1rem; border-radius: 1rem; transition: 0.3s; border: none; cursor: pointer;
+        }
+        .btn-prime:disabled { opacity: 0.3; cursor: not-allowed; background: #222 !important; }
+        
+        #toast {
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px);
+            background: rgba(20, 20, 30, 0.95); border: 1px solid var(--main-blue);
+            padding: 1rem 2rem; border-radius: 1rem; z-index: 9999; transition: 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            display: flex; align-items: center; gap: 10px; pointer-events: none; opacity: 0;
+        }
+        #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+    </style>
+</head>
+<body class="p-4 md:p-8 flex items-center justify-center">
+
+    <div id="toast">
+        <span id="toastMsg" class="text-sm font-bold"></span>
+    </div>
+
+    <div class="w-full max-w-2xl prime-card p-6 md:p-10 space-y-8">
+        
+        <div class="text-center space-y-2">
+            <h1 class="text-2xl md:text-3xl font-black text-blue-500">نظام النخبة للإحالات والمكافآت</h1>
+            <p class="text-xs md:text-sm text-gray-400">شارك كودك واجمع أرباح وأيام مجانية تلقائياً</p>
+        </div>
+
+        <hr class="border-white/5">
+
+        <div class="bg-blue-950/10 border border-blue-500/10 rounded-2xl p-5 text-center space-y-4">
+            <h3 class="text-sm font-bold text-gray-300">كود الإحالة (البرومو كود) الخاص بك</h3>
+            <div class="flex flex-col sm:flex-row gap-3 justify-center items-center">
+                <div id="promoCodeDisplay" class="font-['Orbitron'] text-xl md:text-2xl font-black bg-black/40 border border-white/10 px-6 py-3 rounded-xl tracking-widest text-blue-400 min-w-[200px]">
+                    LOADING..
+                </div>
+                <button onclick="copyPromoCode()" class="btn-prime text-sm px-6 py-3 w-full sm:w-auto">نسخ الكود</button>
+            </div>
+        </div>
+
+        <div class="space-y-3 bg-white/5 border border-white/5 rounded-2xl p-5">
+            <div class="flex justify-between items-center text-sm">
+                <span class="font-bold text-gray-200">🔥 تحدي الأيام المجانية (3 إحالات عادية = يوم مجاني)</span>
+                <span id="dayChallengeCount" class="font-bold text-blue-400">0 / 3</span>
+            </div>
+            <div class="w-full bg-black/50 h-3 rounded-full overflow-hidden border border-white/5">
+                <div id="dayProgressBar" class="progress-bar bg-gradient-to-r from-blue-600 to-cyan-500 h-full w-0"></div>
+            </div>
+            <div class="pt-2 flex justify-end">
+                <button id="claimFreeDayBtn" onclick="requestFreeDay()" class="btn-prime text-xs py-2 px-4" disabled>مطالبة باليوم المجاني</button>
+            </div>
+        </div>
+
+        <div class="space-y-4 bg-white/5 border border-white/5 rounded-2xl p-5">
+            <div class="flex justify-between items-center text-sm">
+                <div>
+                    <span class="font-bold text-gray-200">💰 حصالة الكاش (0.25$ عن كل مشترك شحن 30 يوم+)</span>
+                    <p class="text-[10px] text-gray-400 mt-0.5">العداد يزيد فقط عندما يقوم المحال بتفعيل اشتراك شهر أو أكثر.</p>
+                </div>
+                <span id="cashCount" class="font-bold text-green-400">$0.00</span>
+            </div>
+            <div class="w-full bg-black/50 h-3 rounded-full overflow-hidden border border-white/5">
+                <div id="cashProgressBar" class="progress-bar bg-gradient-to-r from-green-600 to-emerald-400 h-full w-0"></div>
+            </div>
+
+            <div id="withdrawalBox" class="pt-2 space-y-3 hidden">
+                <input type="text" id="walletNumber" class="input-prime text-sm" placeholder="أدخل رقم محفظتك كاش (فودافون، اتصالات، إلخ)">
+                <button id="withdrawBtn" onclick="requestWithdrawal()" class="btn-prime w-full text-sm bg-gradient-to-r from-green-600 to-green-800">تقديم طلب سحب الأرباح</button>
+            </div>
+            <div id="withdrawalLockedMsg" class="text-[11px] text-center text-gray-500">
+                سيفتح قسم السحب تلقائياً فور وصول أرباحك إلى $1.00 أو أكثر (4 مشتركين شحنوا 30 يوم).
+            </div>
+        </div>
+
+        <div class="text-center pt-2">
+            <a href="index.html" class="text-xs text-gray-400 hover:text-blue-500 underline transition-all">← العودة إلى غرفة التداول الرئيسية</a>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, doc, getDoc, setDoc, collection, query, where, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBpy4ZUAtE7tKFsMJocnsywZCYAOM3CAMA",
+            authDomain: "ososo-9ff14.firebaseapp.com",
+            projectId: "ososo-9ff14",
+            storageBucket: "ososo-9ff14.firebasestorage.app",
+            messagingSenderId: "753501605833",
+            appId: "1:753501605833:web:475d02965fc1bdc2732218"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const userPhone = localStorage.getItem('prime_user_phone');
+
+        window.notify = (msg, type = 'info') => {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMsg').innerText = msg;
+            toast.className = 'show'; 
+            toast.style.borderColor = (type === 'error') ? '#ef4444' : '#22c55e';
+            setTimeout(() => toast.className = '', 3000);
+        };
+
+        if(!userPhone) {
+            notify("لم يتم التعرف على الحساب، جاري التحويل للدخول", "error");
+            setTimeout(() => window.location.href = 'login.html', 2000);
+        } else {
+            document.getElementById('promoCodeDisplay').innerText = userPhone;
+            initReferralsSystem();
+        }
+
+        let totalReferralsCount = 0;
+        let paidReferralsCount = 0; // عداد المستخدمين المشحونين 30 يوم فأكثر
+
+        async function initReferralsSystem() {
+            try {
+                // 1. جلب كل المستخدمين المسجلين بكود المستخدم الحالي
+                const q = query(collection(db, "users"), where("referred_by", "==", userPhone));
+                const querySnapshot = await getDocs(q);
+                
+                totalReferralsCount = querySnapshot.size;
+                paidReferralsCount = 0;
+
+                // فحص كل مستخدم لمعرفة أيام اشتراكه
+                querySnapshot.forEach((userDoc) => {
+                    const userData = userDoc.data();
+                    // ملاحظة: لو اسم حقل الأيام عندك مختلف (مثل activeDays أو duration) غير اسم الـ 'days' هنا بالملي
+                    const userDays = userData.days || 0; 
+                    
+                    if (userDays >= 30) {
+                        paidReferralsCount++;
+                    }
+                });
+
+                // 2. شريط تحدي الأيام المجانية (يعتمد على مجرد التسجيل الكلي)
+                const dayCount = Math.min(totalReferralsCount, 3);
+                document.getElementById('dayChallengeCount').innerText = `${dayCount} / 3`;
+                const dayProgressPercent = (dayCount / 3) * 100;
+                document.getElementById('dayProgressBar').style.width = dayProgressPercent + "%";
+
+                const dayReqCheck = await getDoc(doc(db, "free_day_requests", userPhone));
+                if(dayCount >= 3 && !dayReqCheck.exists()) {
+                    document.getElementById('claimFreeDayBtn').disabled = false;
+                } else if(dayReqCheck.exists()) {
+                    document.getElementById('claimFreeDayBtn').innerText = "تم إرسال الطلب للأدمن";
+                    document.getElementById('claimFreeDayBtn').disabled = true;
+                }
+
+                // 3. شريط الأرباح والكاش (يعتمد الآن بالكامل على paidReferralsCount المفعّلين 30 يوم+)
+                const currentEarnings = paidReferralsCount * 0.25;
+                document.getElementById('cashCount').innerText = `$${currentEarnings.toFixed(2)}`;
+                
+                // شريط السحب يكتمل عند وصول الأرباح لـ 1 دولار (يعني 4 مستخدمين شحنوا 30 يوم)
+                const cashProgressPercent = Math.min((currentEarnings / 1.00) * 100, 100);
+                document.getElementById('cashProgressBar').style.width = cashProgressPercent + "%";
+
+                // فتح صندوق السحب فور تخطي الـ 1 دولار
+                if(currentEarnings >= 1.00) {
+                    document.getElementById('withdrawalBox').classList.remove('hidden');
+                    document.getElementById('withdrawalLockedMsg').classList.add('hidden');
+                    
+                    const withdrawCheck = await getDoc(doc(db, "withdrawal_requests", userPhone));
+                    if(withdrawCheck.exists()) {
+                        document.getElementById('withdrawBtn').innerText = "طلب السحب قيد المراجعة لدى الأدمن";
+                        document.getElementById('withdrawBtn').disabled = true;
+                        document.getElementById('walletNumber').disabled = true;
+                        document.getElementById('walletNumber').value = withdrawCheck.data().wallet;
+                    }
+                }
+
+            } catch (error) {
+                console.error("Error loading referrals:", error);
+                notify("خطأ في قراءة بيانات الإحالات", "error");
+            }
+        }
+
+        window.copyPromoCode = () => {
+            navigator.clipboard.writeText(userPhone);
+            notify("تم نسخ البرومو كود الخاص بك بنجاح!");
+        };
+
+        window.requestFreeDay = async () => {
+            const btn = document.getElementById('claimFreeDayBtn');
+            btn.disabled = true;
+            try {
+                await setDoc(doc(db, "free_day_requests", userPhone), {
+                    user_phone: userPhone,
+                    status: "pending",
+                    referrals_found: totalReferralsCount,
+                    createdAt: serverTimestamp()
+                });
+                notify("تم إرسال رقمك للأدمن بنجاح لتفعيل اليوم المجاني!");
+                btn.innerText = "تم إرسال الطلب للأدمن";
+            } catch (e) {
+                notify("حدث خطأ أثناء إرسال الطلب", "error");
+                btn.disabled = false;
+            }
+        };
+
+        window.requestWithdrawal = async () => {
+            const walletNum = document.getElementById('walletNumber').value.trim();
+            if(!walletNum) return notify("برجاء إدخال رقم المحفظة أولاً للاستلام", "error");
+
+            const btn = document.getElementById('withdrawBtn');
+            btn.disabled = true;
+
+            const currentEarnings = paidReferralsCount * 0.25;
+
+            try {
+                await setDoc(doc(db, "withdrawal_requests", userPhone), {
+                    user_phone: userPhone,
+                    wallet: walletNum,
+                    amount: currentEarnings,
+                    status: "pending",
+                    createdAt: serverTimestamp()
+                });
+                notify("تم تقديم طلب السحب بنجاح! سيقوم الأدمن بتحويل المبلغ ومراجعة حسابك.");
+                btn.innerText = "طلب السحب قيد المراجعة لدى الأدمن";
+                document.getElementById('walletNumber').disabled = true;
+            } catch(e) {
+                notify("خطأ في معالجة طلب السحب", "error");
+                btn.disabled = false;
+            }
+        };
+    </script>
+</body>
+</html>
