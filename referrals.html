@@ -50,7 +50,7 @@
         
         <div class="text-center space-y-2">
             <h1 class="text-2xl md:text-3xl font-black text-blue-500">نظام النخبة للإحالات والمكافآت</h1>
-            <p class="text-xs md:text-sm text-gray-400">شارك كودك واجمع أرباح وأيام مجانية تلقائياً</p>
+            <p class="text-xs md:text-sm text-gray-400">شارك كودك واجمع أرباح وأسابيع مجانية تلقائياً</p>
         </div>
 
         <hr class="border-white/5">
@@ -67,14 +67,14 @@
 
         <div class="space-y-3 bg-white/5 border border-white/5 rounded-2xl p-5">
             <div class="flex justify-between items-center text-sm">
-                <span class="font-bold text-gray-200">🔥 تحدي الأيام المجانية (3 إحالات عادية = يوم مجاني)</span>
+                <span class="font-bold text-gray-200">🔥 تحدي النخبة (3 إحالات عادية = 14 يوم مجاني)</span>
                 <span id="dayChallengeCount" class="font-bold text-blue-400">0 / 3</span>
             </div>
             <div class="w-full bg-black/50 h-3 rounded-full overflow-hidden border border-white/5">
                 <div id="dayProgressBar" class="progress-bar bg-gradient-to-r from-blue-600 to-cyan-500 h-full w-0"></div>
             </div>
             <div class="pt-2 flex justify-end">
-                <button id="claimFreeDayBtn" onclick="requestFreeDay()" class="btn-prime text-xs py-2 px-4" disabled>مطالبة باليوم المجاني</button>
+                <button id="claimFreeDayBtn" onclick="requestFreeDay()" class="btn-prime text-xs py-2 px-4" disabled>مطالبة بـ 14 يوم مجاناً</button>
             </div>
         </div>
 
@@ -139,21 +139,18 @@
         }
 
         let totalReferralsCount = 0;
-        let paidReferralsCount = 0; // عداد المستخدمين المشحونين 30 يوم فأكثر
+        let paidReferralsCount = 0;
 
         async function initReferralsSystem() {
             try {
-                // 1. جلب كل المستخدمين المسجلين بكود المستخدم الحالي
                 const q = query(collection(db, "users"), where("referred_by", "==", userPhone));
                 const querySnapshot = await getDocs(q);
                 
                 totalReferralsCount = querySnapshot.size;
                 paidReferralsCount = 0;
 
-                // فحص كل مستخدم لمعرفة أيام اشتراكه
                 querySnapshot.forEach((userDoc) => {
                     const userData = userDoc.data();
-                    // ملاحظة: لو اسم حقل الأيام عندك مختلف (مثل activeDays أو duration) غير اسم الـ 'days' هنا بالملي
                     const userDays = userData.days || 0; 
                     
                     if (userDays >= 30) {
@@ -161,7 +158,6 @@
                     }
                 });
 
-                // 2. شريط تحدي الأيام المجانية (يعتمد على مجرد التسجيل الكلي)
                 const dayCount = Math.min(totalReferralsCount, 3);
                 document.getElementById('dayChallengeCount').innerText = `${dayCount} / 3`;
                 const dayProgressPercent = (dayCount / 3) * 100;
@@ -171,19 +167,16 @@
                 if(dayCount >= 3 && !dayReqCheck.exists()) {
                     document.getElementById('claimFreeDayBtn').disabled = false;
                 } else if(dayReqCheck.exists()) {
-                    document.getElementById('claimFreeDayBtn').innerText = "تم إرسال الطلب للأدمن";
+                    document.getElementById('claimFreeDayBtn').innerText = "تم إرسال طلب الـ 14 يوم للأدمن";
                     document.getElementById('claimFreeDayBtn').disabled = true;
                 }
 
-                // 3. شريط الأرباح والكاش (يعتمد الآن بالكامل على paidReferralsCount المفعّلين 30 يوم+)
                 const currentEarnings = paidReferralsCount * 0.25;
                 document.getElementById('cashCount').innerText = `$${currentEarnings.toFixed(2)}`;
                 
-                // شريط السحب يكتمل عند وصول الأرباح لـ 1 دولار (يعني 4 مستخدمين شحنوا 30 يوم)
                 const cashProgressPercent = Math.min((currentEarnings / 1.00) * 100, 100);
                 document.getElementById('cashProgressBar').style.width = cashProgressPercent + "%";
 
-                // فتح صندوق السحب فور تخطي الـ 1 دولار
                 if(currentEarnings >= 1.00) {
                     document.getElementById('withdrawalBox').classList.remove('hidden');
                     document.getElementById('withdrawalLockedMsg').classList.add('hidden');
@@ -218,8 +211,8 @@
                     referrals_found: totalReferralsCount,
                     createdAt: serverTimestamp()
                 });
-                notify("تم إرسال رقمك للأدمن بنجاح لتفعيل اليوم المجاني!");
-                btn.innerText = "تم إرسال الطلب للأدمن";
+                notify("تم إرسال طلبك للأدمن بنجاح لتفعيل الـ 14 يوم مجاناً!");
+                btn.innerText = "تم إرسال طلب الـ 14 يوم للأدمن";
             } catch (e) {
                 notify("حدث خطأ أثناء إرسال الطلب", "error");
                 btn.disabled = false;
