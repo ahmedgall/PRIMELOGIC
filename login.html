@@ -140,13 +140,14 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        const API_URL = "https://api.ultramsg.com/instance171381/messages/chat";
-        const TOKEN = "5fh5hfytsg5mml9n";
+        // تحديث الـ API_URL والـ TOKEN للجهاز الجديد هنا
+        const API_URL = "https://api.ultramsg.com/instance179234/messages/chat";
+        const TOKEN = "289ctv1m5lnk4105";
 
         let generatedOTP = "";
         let currentPhone = "";
         let currentName = "";
-        let currentPromo = ""; // لتخزين كود الإحالة الموثق أثناء العملية
+        let currentPromo = ""; 
         let flowMode = ""; 
 
         window.notify = (msg, type = 'info') => {
@@ -192,7 +193,6 @@
             return countryCode + cleanPhone;
         }
 
-        // تمرير متغير الـ promo للدالة لتجهيزه قبل الحفظ
         window.sendOTP = async (mode, phone, name = "", promo = "") => {
             generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
             flowMode = mode;
@@ -261,7 +261,6 @@
             btn.disabled = true;
 
             try {
-                // 1. فحص هل التليفون مسجل قبل كده
                 const snap = await getDoc(doc(db, "users", formattedPhone));
                 if(snap.exists()) {
                     notify("الرقم مسجل بالفعل!", "error");
@@ -269,21 +268,16 @@
                     return;
                 }
 
-                // 2. الـ Logic الجديد: فحص برومو كود الإحالة لو موجود
                 let validPromo = "";
                 if(promoInput) {
-                    // تنظيف البرومو كود تحسباً لو دخل رقم عادي مش دولي، السيستم ينظفه تلقائي
                     let cleanPromo = promoInput.replace(/\D/g, '').replace(/^0+/, '');
                     
-                    // التحقق لو كتب رقمه الشخصي كإحالة
                     if(cleanPromo === phoneInput.replace(/\D/g, '').replace(/^0+/, '') || cleanPromo === formattedPhone) {
                         notify("لا يمكنك استخدام رقمك ككود إحالة!", "error");
                         btn.disabled = false;
                         return;
                     }
 
-                    // البحث في الداتابيز: هل الكود (رقم الداعي) موجود؟
-                    // بنجرب نبحث عنه بالـ formattedPhone النظيف أو كـ ID مباشر في Firestore
                     let promoFound = false;
                     const promoSnap = await getDoc(doc(db, "users", cleanPromo));
                     
@@ -291,8 +285,6 @@
                         validPromo = cleanPromo;
                         promoFound = true;
                     } else {
-                        // محاولة فحص لو الكود مخزن بـ مفتاح دولي كاملا بـ 20 أو غيره
-                        // بنلف على الاحتمالات الشائعة كود مصر أو المدخل الحالي
                         const fallbackPromo = cleanPromo.startsWith(countryCode) ? cleanPromo : countryCode + cleanPromo;
                         const promoSnapFallback = await getDoc(doc(db, "users", fallbackPromo));
                         if(promoSnapFallback.exists()) {
@@ -308,7 +300,6 @@
                     }
                 }
 
-                // إرسال البيانات للدالة لبدء الـ OTP
                 await window.sendOTP('register', formattedPhone, name, validPromo);
 
             } catch(e) {
@@ -327,7 +318,6 @@
             if(flowMode === 'register') {
                 const trialEndDate = new Date();
                 
-                // الـ Logic المكافأة: لو مسجل بكود إحالة صحيح ياخد 14 يوم، لو عادي 7 أيام
                 if(currentPromo) {
                     trialEndDate.setDate(trialEndDate.getDate() + 14);
                 } else {
@@ -338,7 +328,7 @@
                     await setDoc(doc(db, "users", currentPhone), {
                         name: currentName, 
                         phone: currentPhone,
-                        referred_by: currentPromo ? currentPromo : null, // ربط الحساب بصاحب الإحالة
+                        referred_by: currentPromo ? currentPromo : null,
                         trial_end: Timestamp.fromDate(trialEndDate),
                         createdAt: serverTimestamp()
                     });
