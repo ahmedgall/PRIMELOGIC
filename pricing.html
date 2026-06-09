@@ -75,7 +75,7 @@
         function subscribe(plan) {
             const myPhone = "201064170259"; 
             const userName = localStorage.getItem('prime_user_name') || 'عميل جديد';
-            const message = `أهلاً يا أحمد، أنا ${userName}. أرغب في تفعيل اشتراك Prime Logic: باقة ${plan}.`;
+            const message = `أهلاً ، أنا ${userName}. أرغب في تفعيل اشتراك Prime Logic: باقة ${plan}.`;
             const url = `https://wa.me/${myPhone}?text=${encodeURIComponent(message)}`;
             window.open(url, '_blank');
         }
