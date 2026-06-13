@@ -1,88 +1,161 @@
 <!DOCTYPE html>
+
 <html lang="ar" dir="rtl">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Prime Logic | خطط الاشتراك</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+
     <style>
+
         :root { --accent: #00d2ff; --bg: #050508; }
+
         body { background-color: var(--bg); color: #fff; font-family: 'Cairo', sans-serif; }
+
         .glass-card { background: rgba(15, 15, 25, 0.9); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.08); transition: 0.4s; display: flex; flex-direction: column; }
+
         .glass-card:hover { border-color: var(--accent); transform: translateY(-8px); }
+
         .king-border { border: 2px solid #ffd700; }
+
         .king-tag { background: #ffd700; color: #000; font-weight: 900; padding: 4px 20px; border-radius: 20px; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; }
+
         .price-font { font-family: 'Orbitron', sans-serif; }
-        
-        /* تأثير النبض الخفيف للبار العلوي */
-        .premium-bar { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); }
+
     </style>
+
 </head>
 
+<body class="py-10 px-4">
 
 
 
-    <!-- العنوان الرئيسي -->
     <div class="max-w-6xl mx-auto text-center mb-12">
+
         <h1 class="text-3xl md:text-5xl font-black mb-4 font-[Orbitron] uppercase text-white">Upgrade Your <span class="text-blue-500">Trading</span></h1>
+
         <p class="text-gray-400 max-w-lg mx-auto text-sm md:text-base px-4">اختر الباقة المناسبة لك وانضم لنخبة المتداولين. دقة في التحليل، سرعة في التنفيذ.</p>
+
     </div>
 
-    <!-- شبكة الباقات -->
+
+
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+
         
+
         <!-- الباقة العادية -->
+
         <div class="glass-card p-6 rounded-[2rem]">
+
             <h3 class="text-lg font-bold mb-1">الباقة العادية</h3>
+
             <p class="text-gray-500 text-xs mb-6">للمبتدئين في السوق</p>
+
             <div class="price-font text-4xl font-black mb-6 text-white"><span class="text-xl text-blue-500">$</span>9.97<span class="text-xs text-gray-500"> / شهر</span></div>
+
             <ul class="text-right space-y-3 mb-8 flex-1 text-sm text-gray-300">
+
                 <li><i class="fas fa-check text-blue-500 ml-2"></i> اشتراك لمدة شهر كامل</li>
+
                 <li><i class="fas fa-check text-blue-500 ml-2"></i> إشارات الرادار الفورية</li>
+
                 <li><i class="fas fa-check text-blue-500 ml-2"></i> تحديثات شارت حية</li>
+
             </ul>
+
             <button onclick="subscribe('العادية - 9.97$')" class="w-full py-3 rounded-xl bg-white/5 hover:bg-blue-600 transition-all font-bold text-sm">اشترك الآن</button>
+
         </div>
+
+
 
         <!-- باقة بلس -->
+
         <div class="glass-card p-6 rounded-[2rem] border-blue-500/30">
+
             <h3 class="text-lg font-bold mb-1 text-blue-400">باقة بلس (PLUS)</h3>
+
             <p class="text-gray-500 text-xs mb-6">التوازن المثالي</p>
+
             <div class="price-font text-4xl font-black mb-6 text-white"><span class="text-xl text-blue-500">$</span>14.97<span class="text-xs text-gray-500"> / 3 شهور</span></div>
+
             <ul class="text-right space-y-3 mb-8 flex-1 text-sm text-gray-300">
+
                 <li><i class="fas fa-check text-blue-500 ml-2"></i> اشتراك 3 شهور</li>
+
                 <li><i class="fas fa-check text-blue-500 ml-2"></i> دقة إشارات أعلى</li>
+
                 <li><i class="fas fa-check text-blue-500 ml-2"></i> تحليل سيولة متقدم</li>
+
                 <li><i class="fas fa-check text-blue-500 ml-2"></i> دعم فني مخصص</li>
+
             </ul>
+
             <button onclick="subscribe('بلس - 14.97$')" class="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm shadow-lg shadow-blue-600/20">اشترك الآن</button>
+
         </div>
 
+
+
         <!-- الباقة الكينج -->
+
         <div class="glass-card p-6 rounded-[2rem] king-border">
+
             <div class="flex justify-center mb-4"><span class="king-tag">THE KING</span></div>
+
             <h3 class="text-lg font-bold mb-1 text-yellow-500">الباقة الكينج</h3>
+
             <p class="text-gray-500 text-xs mb-6">للمستثمرين الكبار</p>
+
             <div class="price-font text-4xl font-black mb-6 text-white"><span class="text-xl text-yellow-500">$</span>21.97<span class="text-xs text-gray-500"> / 6 شهور</span></div>
+
             <ul class="text-right space-y-3 mb-8 flex-1 text-sm text-gray-300">
+
                 <li><i class="fas fa-crown text-yellow-500 ml-2"></i> اشتراك 6 شهور</li>
+
                 <li><i class="fas fa-check text-yellow-500 ml-2"></i> تحليل دفتر الطلبات (OB)</li>
+
                 <li><i class="fas fa-check text-yellow-500 ml-2"></i> أولوية قصوى في الدعم</li>
+
                 <li><i class="fas fa-check text-yellow-500 ml-2"></i> توصيات خاصة</li>
+
             </ul>
+
             <button onclick="subscribe('الكينج - 21.97$')" class="w-full py-3 rounded-xl bg-yellow-500 hover:bg-yellow-400 text-black font-black text-sm transition-all">اشترك الآن</button>
+
         </div>
+
+
 
     </div>
 
+
+
     <script>
+
         function subscribe(plan) {
+
             const myPhone = "201107234915"; 
-            const message = `أهلاً يا حوت، أرغب في تفعيل باقة Prime Logic: (${plan}).\n\nيرجى تزويدي بتفاصيل التحويل لـ:\n- فودافون/اتصالات كاش 📱\n- Binance USDT 🪙\n- فوري كاش 🏪`;
+
+            const message = `أهلاً، أرغب في تفعيل باقة Prime Logic: ${plan}.`;
+
             window.open(`https://wa.me/${myPhone}?text=${encodeURIComponent(message)}`, '_blank');
+
         }
+
     </script>
+
 </body>
+
 </html>
