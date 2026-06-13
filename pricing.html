@@ -19,12 +19,14 @@
 </head>
 <body class="py-10 px-4">
 
+    <!-- العنوان الرئيسي -->
     <div class="max-w-6xl mx-auto text-center mb-12">
         <h1 class="text-3xl md:text-5xl font-black mb-4 font-[Orbitron] uppercase text-white">Upgrade Your <span class="text-blue-500">Trading</span></h1>
         <p class="text-gray-400 max-w-lg mx-auto text-sm md:text-base px-4">اختر الباقة المناسبة لك وانضم لنخبة المتداولين. دقة في التحليل، سرعة في التنفيذ.</p>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+    <!-- شبكة الباقات -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto mb-12">
         
         <!-- الباقة العادية -->
         <div class="glass-card p-6 rounded-[2rem]">
@@ -70,10 +72,40 @@
 
     </div>
 
+    <!-- قسم طرق الدفع المدعومة -->
+    <div class="max-w-4xl mx-auto glass-card p-6 rounded-2xl text-center border-white/5">
+        <h4 class="text-sm font-bold text-gray-400 mb-6 uppercase tracking-wider"><i class="fas fa-shield-alt text-blue-500 ml-2"></i>طرق الدفع المدعومة للمصريين والعرب</h4>
+        
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 items-center justify-center px-2">
+            <!-- فودافون كاش والمحافظ -->
+            <div class="p-3 bg-white/5 rounded-xl border border-white/5 flex flex-col items-center justify-center gap-2">
+                <i class="fas fa-wallet text-red-500 text-xl"></i>
+                <span class="text-xs font-bold text-gray-300">محافظ إلكترونية (فودافون/اتصالات)</span>
+            </div>
+            <!-- بايننس -->
+            <div class="p-3 bg-white/5 rounded-xl border border-white/5 flex flex-col items-center justify-center gap-2">
+                <i class="fab fa-bitcoin text-yellow-500 text-xl"></i>
+                <span class="text-xs font-bold text-gray-300">Binance Pay (USDT)</span>
+            </div>
+            <!-- فوري -->
+            <div class="p-3 bg-white/5 rounded-xl border border-white/5 flex flex-col items-center justify-center gap-2">
+                <i class="fas fa-store text-green-500 text-xl"></i>
+                <span class="text-xs font-bold text-gray-300">فوري (شحن كاش)</span>
+            </div>
+            <!-- الدفع الدولي -->
+            <div class="p-3 bg-white/5 rounded-xl border border-white/5 flex flex-col items-center justify-center gap-2">
+                <i class="fas fa-globe text-blue-400 text-xl"></i>
+                <span class="text-xs font-bold text-gray-300">تحويلات دولية وعربية</span>
+            </div>
+        </div>
+        
+        <p class="text-xs text-gray-500 mt-4">بعد الضغط على اشتراك، سيتم توجيهك لتأكيد التحويل واستلام التوصيات فوراً.</p>
+    </div>
+
     <script>
         function subscribe(plan) {
             const myPhone = "201107234915"; 
-            const message = `أهلاً، أرغب في تفعيل باقة Prime Logic: ${plan}.`;
+            const message = `أهلاً يا حوت، أرغب في تفعيل باقة Prime Logic: (${plan}).\n\nيرجى تزويدي بتفاصيل التحويل لـ:\n- فودافون/اتصالات كاش 📱\n- Binance USDT 🪙\n- فوري كاش 🏪`;
             window.open(`https://wa.me/${myPhone}?text=${encodeURIComponent(message)}`, '_blank');
         }
     </script>
