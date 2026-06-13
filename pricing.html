@@ -15,9 +15,47 @@
         .king-border { border: 2px solid #ffd700; }
         .king-tag { background: #ffd700; color: #000; font-weight: 900; padding: 4px 20px; border-radius: 20px; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; }
         .price-font { font-family: 'Orbitron', sans-serif; }
+        
+        /* تأثير النبض الخفيف للبار العلوي */
+        .premium-bar { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); }
     </style>
 </head>
-<body class="py-10 px-4">
+<body class="py-6 px-4">
+
+    <!-- بار طرق الدفع العلوي البروفيشنال -->
+    <div class="max-w-4xl mx-auto premium-bar rounded-2xl p-4 mb-10 flex flex-col sm:flex-row items-center justify-between gap-4 backdrop-blur-md">
+        <div class="flex items-center gap-2">
+            <span class="flex h-2 w-2 relative">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+            </span>
+            <p class="text-xs text-gray-400 font-bold">طرق الدفع الآمنة والمباشرة مفعلة تلقائياً:</p>
+        </div>
+        
+        <!-- اللوجوهات المدمجة بدقة عالية -->
+        <div class="flex items-center justify-center gap-6 flex-wrap">
+            <!-- فودافون كاش -->
+            <div class="flex items-center gap-1.5 bg-black/40 py-1.5 px-3 rounded-xl border border-red-600/20 grayscale hover:grayscale-0 transition-all duration-300">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c8/Vodafone_website_logo.svg" class="h-4 w-auto" alt="Vodafone Cash">
+                <span class="text-[10px] font-black tracking-wider text-red-500">CASH</span>
+            </div>
+            <!-- بايننس باي -->
+            <div class="flex items-center gap-1.5 bg-black/40 py-1.5 px-3 rounded-xl border border-yellow-500/20 grayscale hover:grayscale-0 transition-all duration-300">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/57/Binance_Logo.svg" class="h-4 w-auto" alt="Binance Pay">
+                <span class="text-[10px] font-black tracking-wider text-yellow-400">PAY</span>
+            </div>
+            <!-- فوري -->
+            <div class="flex items-center gap-1.5 bg-black/40 py-1.5 px-3 rounded-xl border border-orange-500/20 grayscale hover:grayscale-0 transition-all duration-300">
+                <img src="https://www.fawry.com/assets/images/fawry-logo.svg" class="h-4 w-auto" alt="Fawry" onerror="this.src='https://img.icons8.com/color/48/fawry.png';">
+                <span class="text-[10px] font-black tracking-wider text-orange-500">فوري</span>
+            </div>
+            <!-- اتصالات كاش -->
+            <div class="flex items-center gap-1.5 bg-black/40 py-1.5 px-3 rounded-xl border border-green-500/20 grayscale hover:grayscale-0 transition-all duration-300">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Etisalat_Logo.svg" class="h-3 w-auto" alt="Etisalat Cash">
+                <span class="text-[10px] font-black tracking-wider text-green-500">كاش</span>
+            </div>
+        </div>
+    </div>
 
     <!-- العنوان الرئيسي -->
     <div class="max-w-6xl mx-auto text-center mb-12">
@@ -26,7 +64,7 @@
     </div>
 
     <!-- شبكة الباقات -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto mb-12">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
         
         <!-- الباقة العادية -->
         <div class="glass-card p-6 rounded-[2rem]">
@@ -70,36 +108,6 @@
             <button onclick="subscribe('الكينج - 21.97$')" class="w-full py-3 rounded-xl bg-yellow-500 hover:bg-yellow-400 text-black font-black text-sm transition-all">اشترك الآن</button>
         </div>
 
-    </div>
-
-    <!-- قسم طرق الدفع المدعومة -->
-    <div class="max-w-4xl mx-auto glass-card p-6 rounded-2xl text-center border-white/5">
-        <h4 class="text-sm font-bold text-gray-400 mb-6 uppercase tracking-wider"><i class="fas fa-shield-alt text-blue-500 ml-2"></i>طرق الدفع المدعومة للمصريين والعرب</h4>
-        
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 items-center justify-center px-2">
-            <!-- فودافون كاش والمحافظ -->
-            <div class="p-3 bg-white/5 rounded-xl border border-white/5 flex flex-col items-center justify-center gap-2">
-                <i class="fas fa-wallet text-red-500 text-xl"></i>
-                <span class="text-xs font-bold text-gray-300">محافظ إلكترونية (فودافون/اتصالات)</span>
-            </div>
-            <!-- بايننس -->
-            <div class="p-3 bg-white/5 rounded-xl border border-white/5 flex flex-col items-center justify-center gap-2">
-                <i class="fab fa-bitcoin text-yellow-500 text-xl"></i>
-                <span class="text-xs font-bold text-gray-300">Binance Pay (USDT)</span>
-            </div>
-            <!-- فوري -->
-            <div class="p-3 bg-white/5 rounded-xl border border-white/5 flex flex-col items-center justify-center gap-2">
-                <i class="fas fa-store text-green-500 text-xl"></i>
-                <span class="text-xs font-bold text-gray-300">فوري (شحن كاش)</span>
-            </div>
-            <!-- الدفع الدولي -->
-            <div class="p-3 bg-white/5 rounded-xl border border-white/5 flex flex-col items-center justify-center gap-2">
-                <i class="fas fa-globe text-blue-400 text-xl"></i>
-                <span class="text-xs font-bold text-gray-300">تحويلات دولية وعربية</span>
-            </div>
-        </div>
-        
-        <p class="text-xs text-gray-500 mt-4">بعد الضغط على اشتراك، سيتم توجيهك لتأكيد التحويل واستلام التوصيات فوراً.</p>
     </div>
 
     <script>
