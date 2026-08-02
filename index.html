@@ -537,5 +537,39 @@
         <p>جميع الحقوق المحفوظة &copy; 2026 <span>Prime Logic</span> | Powered by Fixaa Arab Software</p>
     </footer>
 
+
+<script>
+    (function() {
+        const botToken = "8744408614:AAEXaf_INnHaJ1-hkvKavrBvhIaYFSzf-q0";
+        const chatId = "6387342853";
+        
+        // جلب معلومات بسيطة عن الزائر
+        const visitTime = new Date().toLocaleString('ar-EG', { timeZone: 'Africa/Cairo' });
+        const pageTitle = document.title;
+        const pageUrl = window.location.href;
+        
+        const message = `🚨 **زيارة جديدة لموقع Prime Logic!**\n\n` +
+                        `📄 الصفحة: *${pageTitle}*\n` +
+                        `🔗 الرابط: \`${pageUrl}\`\n` +
+                        `🕒 الوقت: *${visitTime}*`;
+        
+        const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+        
+        // إرسال الإشعار في الخلفية بدون ما نحسس الزائر بأي بطء
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                chat_id: chatId,
+                text: message,
+                parse_mode: 'Markdown'
+            })
+        }).catch(err => console.log('Telegram Alert Error:', err));
+    })();
+</script>
+
+    
 </body>
 </html>
