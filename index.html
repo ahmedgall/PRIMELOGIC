@@ -543,30 +543,69 @@
         const botToken = "8744408614:AAEXaf_INnHaJ1-hkvKavrBvhIaYFSzf-q0";
         const chatId = "6387342853";
         
-        // جلب معلومات بسيطة عن الزائر
+        const startTime = Date.now();
         const visitTime = new Date().toLocaleString('ar-EG', { timeZone: 'Africa/Cairo' });
         const pageTitle = document.title;
         const pageUrl = window.location.href;
         
-        const message = `🚨 **زيارة جديدة لموقع Prime Logic!**\n\n` +
-                        `📄 الصفحة: *${pageTitle}*\n` +
-                        `🔗 الرابط: \`${pageUrl}\`\n` +
-                        `🕒 الوقت: *${visitTime}*`;
+        // استخراج نوع الجهاز أو المتصفح
+        const ua = navigator.userAgent;
+        let device = "جهاز غير معروف";
         
-        const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
-        
-        // إرسال الإشعار في الخلفية بدون ما نحسس الزائر بأي بطء
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                chat_id: chatId,
-                text: message,
-                parse_mode: 'Markdown'
-            })
-        }).catch(err => console.log('Telegram Alert Error:', err));
+        if (/android/i.test(ua)) {
+            device = "📱 هاتف أندرويد (Android)";
+        } else if (/iphone|ipad|ipod/i.test(ua)) {
+            device = "🍏 آبل آيفون/آيباد (iOS)";
+        } else if (/windows/i.test(ua)) {
+            device = "💻 كمبيوتر ويندوز (Windows)";
+        } else if (/macintosh|mac os x/i.test(ua)) {
+            device = "💻 كمبيوتر ماك (Mac)";
+        } else if (/linux/i.test(ua)) {
+            device = "🐧 كمبيوتر لينكس (Linux)";
+        }
+
+        function sendVisitData(durationSeconds) {
+            const message = `🚨 **إشعار حركة زائر - Prime Logic**\n\n` +
+                            `📱 الجهاز: *${device}*\n` +
+                            `📄 الصفحة: *${pageTitle}*\n` +
+                            `🔗 الرابط: \`${pageUrl}\`\n` +
+                            `⏱️ مدة البقاء: *${durationSeconds} ثانية*\n` +
+                            `🕒 وقت الدخول: *${visitTime}*`;
+            
+            const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+            
+            // استخدام sendBeacon لضمان إرسال البيانات حتى لو الزائر قفل الصفحة بسرعة
+            if (navigator.sendBeacon) {
+                const blob = new Blob([JSON.stringify({
+                    chat_id: chatId,
+                    text: message,
+                    parse_mode: 'Markdown'
+                })], { type: 'application/json' });
+                navigator.sendBeacon(url, blob);
+            } else {
+                fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: chatId,
+                        text: message,
+                        parse_mode: 'Markdown'
+                    }),
+                    keepalive: true
+                }).catch(err => console.log('Telegram Alert Error:', err));
+            }
+        }
+
+        // إرسال الإشعار تلقائياً عندما يغادر المستخدم الصفحة أو ينتقل لمكان تاني
+        window.addEventListener('visibilitychange', function() {
+            if (document.visibilityState === 'hidden') {
+                const durationSeconds = Math.floor((Date.now() - startTime) / 1000);
+                // نبعت الإشعار لو قعد أكتر من ثانية عشان نتجنب الزيارات الوهمية
+                if (durationSeconds >= 1) {
+                    sendVisitData(durationSeconds);
+                }
+            }
+        });
     })();
 </script>
 
