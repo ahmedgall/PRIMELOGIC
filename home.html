@@ -22,181 +22,250 @@
 <meta name="twitter:image" content="https://primelogic.fun/icon.png">
   <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --accent: #00d2ff; --bg: #050508; --card: rgba(15, 15, 25, 0.95); }
-        body { background-color: var(--bg); color: #e2e8f0; font-family: 'Cairo', sans-serif; margin: 0; overflow-x: hidden; }
-        .glass { background: var(--card); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.05); }
-        .sidebar { width: 280px; height: 100vh; position: fixed; right: 0; top: 0; z-index: 1000; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-        .main-content { margin-right: 280px; transition: margin 0.4s ease; min-height: 100vh; display: flex; flex-direction: column; }
+        :root { 
+            --accent: #00E5A8; 
+            --secondary: #00C2FF;
+            --bg: #07090d; 
+            --card: #10151d; 
+            --border: rgba(255, 255, 255, 0.06);
+        }
+        body { 
+            background-color: var(--bg); 
+            color: #e2e8f0; 
+            font-family: 'Cairo', 'Inter', sans-serif; 
+            margin: 0; 
+            overflow-x: hidden; 
+        }
+        
+        .glass { 
+            background: rgba(16, 21, 29, 0.85); 
+            backdrop-filter: blur(20px); 
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border); 
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+        
+        .sidebar { 
+            width: 290px; 
+            height: 100vh; 
+            position: fixed; 
+            right: 0; 
+            top: 0; 
+            z-index: 1000; 
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); 
+            background: #0b0f17;
+            border-left: 1px solid var(--border);
+        }
+        
+        .main-content { 
+            margin-right: 290px; 
+            transition: margin 0.4s ease; 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+        }
+        
         @media (max-width: 1024px) {
             .sidebar { transform: translateX(100%); }
-            .sidebar.open { transform: translateX(0); box-shadow: -10px 0 30px rgba(0,0,0,0.9); }
-            .main-content { margin-right: 0; padding: 15px; }
+            .sidebar.open { transform: translateX(0); box-shadow: -15px 0 40px rgba(0,0,0,0.9); }
+            .main-content { margin-right: 0; padding: 12px; }
         }
-        .chart-container { flex-grow: 1; height: 500px; width: 100%; border-radius: 1.5rem; overflow: hidden; }
-        @media (max-width: 768px) { .chart-container { height: 400px; } }
-        .modal { position: fixed; inset: 0; z-index: 2000; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); padding: 20px; }
+        
+        .chart-container { 
+            flex-grow: 1; 
+            height: 540px; 
+            width: 100%; 
+            border-radius: 22px; 
+            overflow: hidden; 
+            border: 1px solid var(--border);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+        }
+        @media (max-width: 768px) { .chart-container { height: 420px; } }
+        
+        .modal { 
+            position: fixed; 
+            inset: 0; 
+            z-index: 2000; 
+            display: none; 
+            align-items: center; 
+            justify-content: center; 
+            background: rgba(7, 9, 13, 0.85); 
+            backdrop-filter: blur(12px); 
+            padding: 20px; 
+        }
         .modal.active { display: flex; }
+        
         @keyframes flyToSidebar {
             0% { transform: scale(1) translate(-50%, -50%); opacity: 1; top: 50%; left: 50%; position: fixed; }
             100% { transform: scale(0.2) translate(0, 0); opacity: 0; top: 120px; left: 20px; position: fixed; }
         }
-        .flying-seven { position: fixed; font-family: 'Orbitron'; font-size: 80px; color: var(--accent); font-weight: 900; z-index: 3000; display: none; }
-        .flying-seven.active { display: block; animation: flyToSidebar 1.2s forwards ease-in-out; }
-        #overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 999; display: none; }
+        .flying-seven { position: fixed; font-family: 'Orbitron'; font-size: 80px; color: var(--accent); font-weight: 900; z-index: 3000; display: none; text-shadow: 0 0 30px rgba(0,229,168,0.6); }
+        .flying-seven.active { display: block; animation: flyToSidebar 1.2s forwards cubic-bezier(0.16, 1, 0.3, 1); }
+        
+        #overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 999; display: none; backdrop-filter: blur(4px); }
         #overlay.active { display: block; }
         
         /* كارت الحجب عند انتهاء الاشتراك */
-        .lock-overlay { display: none; position: absolute; inset: 0; background: rgba(10, 10, 18, 0.95); backdrop-filter: blur(12px); z-index: 50; flex-direction: column; align-items: center; justify-content: center; text-center: center; border-radius: 1.5rem; }
+        .lock-overlay { display: none; position: absolute; inset: 0; background: rgba(7, 9, 13, 0.95); backdrop-filter: blur(16px); z-index: 50; flex-direction: column; align-items: center; justify-content: center; text-align: center; border-radius: 22px; }
         .lock-overlay.active { display: flex; }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #07090d; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(0,229,168,0.4); }
     </style>
 </head>
 
-    
-    
-    
-    
-    
-    <body class="antialiased">
+<body class="antialiased">
 
-<div id="statsBanner" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[9999] w-[calc(100%-2rem)] max-w-[400px] cursor-grab active:cursor-grabbing select-none transition-all duration-300 transform translate-y-[200px] opacity-0">
-    <div class="glass border border-blue-500/30 rounded-[2rem] p-5 shadow-2xl shadow-black/80 flex flex-col gap-3 relative overflow-hidden">
+<div id="statsBanner" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[9999] w-[calc(100%-2rem)] max-w-[420px] cursor-grab active:cursor-grabbing select-none transition-all duration-300 transform translate-y-[200px] opacity-0">
+    <div class="glass border border-cyan-500/30 rounded-[22px] p-5 shadow-2xl shadow-black/90 flex flex-col gap-3 relative overflow-hidden bg-[#10151d]">
         
-        <div class="absolute -top-10 -left-10 w-24 h-24 bg-blue-500/10 rounded-full blur-2xl pointer-events-none"></div>
+        <div class="absolute -top-10 -left-10 w-28 h-28 bg-[#00C2FF]/15 rounded-full blur-3xl pointer-events-none"></div>
         
         <div class="w-12 h-1 bg-white/20 rounded-full mx-auto mb-1"></div>
 
         <div class="flex items-center justify-between">
-            <h3 class="text-xs font-bold text-blue-400 tracking-wider uppercase font-['Orbitron']">Last 12 Hours Performance</h3>
-            <span class="text-[10px] bg-blue-500/10 border border-blue-500/20 text-blue-400 px-2 py-0.5 rounded-full font-bold animate-pulse">رادار النخبة</span>
+            <h3 class="text-xs font-bold text-[#00C2FF] tracking-wider uppercase font-['Orbitron']">أداء آخر 12 ساعة</h3>
+            <span class="text-[10px] bg-[#00C2FF]/10 border border-[#00C2FF]/20 text-[#00C2FF] px-2.5 py-0.5 rounded-full font-bold animate-pulse font-['Orbitron']">رادار النخبة</span>
         </div>
 
         <div class="grid grid-cols-2 gap-4 text-center my-1">
-            <div class="bg-green-500/5 border border-green-500/10 p-3 rounded-2xl">
-                <p class="text-[10px] text-green-400 font-bold mb-1">نسبة الأرباح</p>
-                <p class="text-2xl font-black font-['Orbitron'] text-green-400">78.4%</p>
+            <div class="bg-[#00E5A8]/5 border border-[#00E5A8]/20 p-3.5 rounded-2xl">
+                <p class="text-[11px] text-[#00E5A8] font-bold mb-1">نسبة الأرباح</p>
+                <p class="text-2xl font-black font-['Orbitron'] text-[#00E5A8]">78.4%</p>
             </div>
-            <div class="bg-red-500/5 border border-red-500/10 p-3 rounded-2xl">
-                <p class="text-[10px] text-red-400 font-bold mb-1">نسبة الخسارة</p>
-                <p class="text-2xl font-black font-['Orbitron'] text-red-400">21.6%</p>
+            <div class="bg-[#ff4d5a]/5 border border-[#ff4d5a]/20 p-3.5 rounded-2xl">
+                <p class="text-[11px] text-[#ff4d5a] font-bold mb-1">نسبة الخسارة</p>
+                <p class="text-2xl font-black font-['Orbitron'] text-[#ff4d5a]">21.6%</p>
             </div>
         </div>
 
-        <p class="text-[10px] text-center text-gray-500">اسحب البانر (لأعلى، لليمين، أو لليسار) لإغلاقه 📡</p>
+        <p class="text-[10px] text-center text-gray-400">اسحب البانر (لأعلى، لليمين، أو لليسار) لإغلاقه 📡</p>
     </div>
 </div>
 
-
-    
     <div id="overlay" onclick="toggleSidebar()"></div>
     <div id="flying7" class="flying-seven">7</div>
 
     <div id="welcomeModal" class="modal">
-        <div class="glass p-8 rounded-[2rem] text-center max-w-sm w-full border-blue-500/30">
+        <div class="glass p-8 rounded-[22px] text-center max-w-sm w-full border-[#00C2FF]/30 bg-[#10151d]">
+            <div class="w-16 h-16 bg-[#00C2FF]/10 border border-[#00C2FF]/30 text-[#00C2FF] rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4 shadow-[0_0_20px_rgba(0,194,255,0.2)]">
+                <i class="fas fa-gift"></i>
+            </div>
             <h2 class="text-2xl font-black mb-3 text-white">مبروك يا بطل! 🚀</h2>
-            <p class="text-gray-400 text-sm mb-6">لقد حصلت على <span class="text-blue-400 font-bold">أسبوع مجاني</span> هدية ترحيبية.</p>
-            <button id="giftBtn" onclick="claimGift()" class="w-full py-4 bg-blue-600 text-white font-bold rounded-xl shadow-lg shadow-blue-500/20 hover:bg-blue-500 transition-all">تفعيل الهدية</button>
+            <p class="text-gray-300 text-sm mb-6 leading-relaxed">لقد حصلت على <span class="text-[#00C2FF] font-bold">أسبوع مجاني</span> هدية ترحيبية.</p>
+            <button id="giftBtn" onclick="claimGift()" class="w-full py-4 bg-gradient-to-r from-[#00C2FF] to-[#00E5A8] text-[#07090d] font-black rounded-xl shadow-lg shadow-[#00C2FF]/20 hover:scale-[1.02] transition-all">تفعيل الهدية</button>
         </div>
     </div>
 
     <div id="historyModal" class="modal">
-        <div class="glass p-6 rounded-[2rem] w-full max-w-md border-white/10 relative">
-            <button onclick="toggleModal('historyModal')" class="absolute top-4 left-4 text-gray-500"><i class="fas fa-times"></i></button>
-            <h3 class="text-lg font-bold mb-5 text-blue-400 flex items-center gap-2"><i class="fas fa-history"></i> سجل آخر 10 توصيات</h3>
-            <div id="historyList" class="space-y-3 max-h-[60vh] overflow-y-auto"></div>
+        <div class="glass p-6 rounded-[22px] w-full max-w-md border-white/10 relative bg-[#10151d]">
+            <button onclick="toggleModal('historyModal')" class="absolute top-5 left-5 text-gray-400 hover:text-white transition-colors"><i class="fas fa-times"></i></button>
+            <h3 class="text-lg font-bold mb-5 text-[#00C2FF] flex items-center gap-2 font-['Cairo']"><i class="fas fa-history"></i> سجل آخر 10 توصيات</h3>
+            <div id="historyList" class="space-y-3 max-h-[60vh] overflow-y-auto pr-1"></div>
         </div>
     </div>
 
-    <aside id="sidebar" class="sidebar glass border-l border-white/5 flex flex-col">
-        <div class="p-8 pb-4">
-            <h1 class="text-2xl font-black font-[Orbitron] text-white italic">PRIME<span class="text-blue-500">LOGIC</span></h1>
-            <p class="text-[8px] tracking-[4px] text-gray-600 mt-1 uppercase font-bold">Fixaa Arab Enterprise</p>
+    <aside id="sidebar" class="sidebar flex flex-col">
+        <div class="p-6 pb-4 border-b border-white/5">
+            <div class="flex items-center gap-3">
+                <img src="icona.png" alt="Prime Logic" class="w-10 h-10 object-contain drop-shadow-[0_0_10px_rgba(0,229,168,0.4)]">
+                <div>
+                    <h1 class="text-xl font-black font-[Orbitron] text-white tracking-wider">PRIME <span class="text-[#00E5A8]">LOGIC</span></h1>
+                    <p class="text-[9px] tracking-[3px] text-gray-400 mt-0.5 uppercase font-bold font-['Orbitron']">AI SMART TRADING</p>
+                </div>
+            </div>
         </div>
 
-        <div class="mx-4 mb-6 p-4 rounded-2xl bg-white/5 border border-white/5 text-right">
+        <div class="mx-4 my-5 p-4 rounded-[18px] bg-[#10151d] border border-white/5 text-right shadow-inner">
             <div class="flex items-center gap-3">
-                <div id="userInitial" class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-lg font-bold text-white">..</div>
+                <div id="userInitial" class="w-11 h-11 rounded-xl bg-gradient-to-br from-[#00C2FF] to-[#00E5A8] text-[#07090d] flex items-center justify-center text-lg font-black font-['Orbitron'] shadow-md">..</div>
                 <div class="flex-1 min-w-0">
                     <h4 id="sideName" class="text-xs font-bold text-white truncate">تحميل...</h4>
-                    <div class="flex items-center gap-2 justify-end">
-                        <span id="sidePhone" class="text-[9px] text-blue-400 font-mono">01xxxxxxxxx</span>
+                    <div class="flex items-center gap-2 justify-end mt-0.5">
+                        <span id="sidePhone" class="text-[10px] text-[#00C2FF] font-mono" dir="ltr">01xxxxxxxxx</span>
                     </div>
                 </div>
             </div>
             <div class="mt-4 pt-3 border-t border-white/5 flex justify-between items-center">
-                <span class="text-[9px] text-gray-500 font-bold uppercase">الصلاحية</span>
-                <span id="daysCount" class="bg-blue-600/20 text-blue-400 px-2 py-1 rounded-md text-[10px] font-bold font-[Orbitron]">--</span>
+                <span class="text-[10px] text-gray-400 font-bold uppercase">الصلاحية</span>
+                <span id="daysCount" class="bg-[#00E5A8]/15 text-[#00E5A8] px-2.5 py-1 rounded-lg text-[10px] font-bold font-[Orbitron] border border-[#00E5A8]/20">--</span>
             </div>
         </div>
 
-        <nav class="flex-1 px-3 space-y-1">
-            <a href="#" class="flex items-center gap-3 p-3 rounded-xl text-blue-400 bg-blue-500/10 text-sm font-bold justify-end"><span>غرفة التداول</span> <i class="fas fa-chart-line w-5"></i></a>
-            <button id="historyNavBtn" onclick="toggleModal('historyModal')" class="flex items-center gap-3 p-3 w-full text-gray-400 hover:bg-white/5 rounded-xl transition-all text-sm justify-end"><span>تاريخ الإشارات</span> <i class="fas fa-history w-5"></i></button>
-        <a href="rules.html" class="flex items-center gap-3 p-3 w-full text-blue-400 hover:bg-white/5 rounded-xl transition-all text-sm justify-end border-t border-white/5 mt-2">
-    <span>قواعد التداول الذهبية</span> <i class="fas fa-book-open w-5"></i>
-</a>
-
-          <a href="pricing.html" class="flex items-center gap-3 p-3 rounded-xl text-gray-400 hover:bg-white/5 text-sm justify-end"><span>الباقات</span> <i class="fas fa-gem w-5"></i></a>
-   
-            <div class="mt-auto pt-6 border-t border-white/5">
- 
-<a href="referrals.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:text-blue-500 hover:bg-blue-950/20 transition-all duration-300">
-    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
-    </svg>
-    <span class="font-bold text-sm">نظام الإحالات</span>
-</a>
-
-            <button onclick="logout()" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-all text-right font-medium">
-        <i class="fas fa-sign-out-alt"></i>
-        <span>تسجيل الخروج</span>
-    </button>
-</div>
-
+        <nav class="flex-1 px-3 space-y-1.5 overflow-y-auto">
+            <a href="#" class="flex items-center gap-3.5 p-3.5 rounded-xl text-[#00E5A8] bg-[#00E5A8]/10 border border-[#00E5A8]/20 text-sm font-bold justify-end shadow-sm"><span>غرفة التداول</span> <i class="fas fa-chart-line w-5 text-center"></i></a>
+            <button id="historyNavBtn" onclick="toggleModal('historyModal')" class="flex items-center gap-3.5 p-3.5 w-full text-gray-300 hover:text-white hover:bg-white/5 rounded-xl transition-all text-sm justify-end font-medium"><span>تاريخ الإشارات</span> <i class="fas fa-history w-5 text-center text-[#00C2FF]"></i></button>
+            <a href="rules.html" class="flex items-center gap-3.5 p-3.5 w-full text-gray-300 hover:text-white hover:bg-white/5 rounded-xl transition-all text-sm justify-end font-medium">
+                <span>قواعد التداول الذهبية</span> <i class="fas fa-book-open w-5 text-center text-[#00C2FF]"></i>
+            </a>
+            <a href="pricing.html" class="flex items-center gap-3.5 p-3.5 rounded-xl text-gray-300 hover:text-white hover:bg-white/5 text-sm justify-end font-medium"><span>الباقات والاشتراكات</span> <i class="fas fa-gem w-5 text-center text-[#ffb300]"></i></a>
+            <a href="referrals.html" class="flex items-center gap-3.5 p-3.5 rounded-xl text-gray-300 hover:text-white hover:bg-white/5 transition-all text-sm justify-end font-medium">
+                <span class="font-bold">نظام الإحالات</span> <i class="fas fa-users w-5 text-center text-[#00E5A8]"></i>
+            </a>
         </nav>
 
-        <div class="p-4 mt-auto border-t border-white/5">
-            <button id="logoutBtn" class="flex items-center gap-3 p-3 w-full text-red-400 hover:bg-red-500/5 rounded-xl text-sm justify-end"><span>خروج</span> <i class="fas fa-power-off"></i></button>
+        <div class="p-4 mt-auto border-t border-white/5 space-y-2">
+            <button onclick="logout()" id="logoutBtn" class="flex items-center gap-3.5 p-3.5 w-full text-[#ff4d5a] hover:bg-[#ff4d5a]/10 rounded-xl text-sm justify-end font-bold transition-all"><span>تسجيل الخروج</span> <i class="fas fa-power-off w-5 text-center"></i></button>
         </div>
     </aside>
 
     <main class="main-content p-4 lg:p-8 relative">
         
         <div id="subscriptionLock" class="lock-overlay p-6">
-            <div class="max-w-md p-8 glass border border-red-500/30 rounded-[2rem] flex flex-col items-center">
-                <div class="w-16 h-16 bg-red-500/10 border border-red-500/30 text-red-500 rounded-2xl flex items-center justify-center text-2xl mb-4 animate-bounce">
+            <div class="max-w-md p-8 glass border border-[#ff4d5a]/30 rounded-[22px] flex flex-col items-center bg-[#10151d] shadow-2xl">
+                <div class="w-16 h-16 bg-[#ff4d5a]/10 border border-[#ff4d5a]/30 text-[#ff4d5a] rounded-2xl flex items-center justify-center text-2xl mb-4 animate-bounce">
                     <i class="fas fa-lock"></i>
                 </div>
                 <h2 class="text-2xl font-black text-white mb-2">انتهت صلاحية الحساب!</h2>
-                <p class="text-gray-400 text-sm mb-6 leading-relaxed">للاستمرار في استقبال إشارات رادار البورصة الحية وتوصيات الذكاء الاصطناعي الفورية، يرجى تجديد اشتراكك في باقات النخبة.</p>
-                <a href="pricing.html" class="px-8 py-4 bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold rounded-xl shadow-lg shadow-blue-500/20 hover:scale-105 transition-all flex items-center gap-2">
+                <p class="text-gray-300 text-sm mb-6 leading-relaxed text-center">للاستمرار في استقبال إشارات رادار البورصة الحية وتوصيات الذكاء الاصطناعي الفورية، يرجى تجديد اشتراكك في باقات النخبة.</p>
+                <a href="pricing.html" class="px-8 py-4 bg-gradient-to-r from-[#00C2FF] to-[#00E5A8] text-[#07090d] font-black rounded-xl shadow-lg shadow-[#00C2FF]/20 hover:scale-105 transition-all flex items-center gap-2">
                     <span>عرض خطط التجديد والاشتراك</span> <i class="fas fa-arrow-left"></i>
                 </a>
             </div>
         </div>
 
-        <header class="flex justify-between items-center mb-6">
-            <button onclick="toggleSidebar()" class="lg:hidden w-10 h-10 glass rounded-xl flex items-center justify-center text-blue-400"><i class="fas fa-bars-staggered"></i></button>
-            <div class="flex items-center gap-3">
-                <div class="w-2 h-2 bg-green-500 rounded-full animate-ping"></div>
-                <span class="text-[10px] font-bold text-gray-500 uppercase">Live Feed</span>
+        <header class="flex justify-between items-center mb-6 glass p-4 rounded-[22px]">
+            <button onclick="toggleSidebar()" class="lg:hidden w-10 h-10 bg-white/5 border border-white/10 rounded-xl flex items-center justify-center text-[#00C2FF]"><i class="fas fa-bars-staggered"></i></button>
+            <div class="flex items-center gap-3 mr-auto lg:mr-0">
+                <div class="w-2.5 h-2.5 bg-[#00E5A8] rounded-full animate-ping"></div>
+                <span class="text-[11px] font-bold text-gray-300 uppercase tracking-wider font-['Orbitron']">Live Feed Server Active</span>
             </div>
+            <div id="market-alert" class="hidden text-xs font-bold px-3 py-1 rounded-xl bg-white/5 border border-white/10"></div>
         </header>
 
-        <div id="signalCard" class="glass p-6 rounded-[1.5rem] border-r-4 border-blue-500 mb-6 flex flex-col sm:flex-row justify-between items-center gap-4 shadow-xl">
-            <div class="text-center sm:text-right w-full">
-                <p class="text-blue-400 text-[9px] font-black uppercase tracking-[2px] mb-1">Prime OrderBook Analyzer (XAU/USD)</p>
-                <h2 id="signalText" class="text-2xl sm:text-3xl font-black italic text-white">جاري تحليل أحجام الشراء والبيع في البورصة الحية...</h2>
+        <div id="signalCard" class="glass p-6 lg:p-8 rounded-[22px] border-r-4 border-[#00C2FF] mb-6 flex flex-col sm:flex-row justify-between items-center gap-6 shadow-2xl bg-[#10151d] relative overflow-hidden">
+            <div class="absolute -right-20 -bottom-20 w-40 h-40 bg-[#00C2FF]/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="text-center sm:text-right w-full z-10">
+                <div class="flex items-center gap-2 justify-center sm:justify-start mb-2">
+                    <span class="px-2.5 py-0.5 rounded-md bg-[#00C2FF]/10 border border-[#00C2FF]/20 text-[#00C2FF] text-[10px] font-bold font-['Orbitron']">XAU/USD</span>
+                    <span class="text-xs text-gray-400">Prime OrderBook Analyzer</span>
+                </div>
+                <h2 id="signalText" class="text-xl sm:text-2xl font-black italic text-white leading-tight">جاري تحليل أحجام الشراء والبيع في البورصة الحية...</h2>
             </div>
-            <div class="bg-white/5 px-4 py-2 rounded-xl border border-white/5 min-w-[100px] text-center">
-                <p class="text-[9px] text-gray-500 font-bold">قوة الاتجاه</p>
-                <p id="accuracyValue" class="text-lg font-black text-white font-[Orbitron]">--%</p>
+            <div class="bg-white/[0.03] border border-white/10 px-5 py-3.5 rounded-2xl min-w-[120px] text-center z-10 shadow-inner">
+                <p class="text-[10px] text-gray-400 font-bold mb-1 uppercase tracking-wider">قوة الاتجاه</p>
+                <p id="accuracyValue" class="text-2xl font-black text-[#00E5A8] font-[Orbitron]">--%</p>
             </div>
         </div>
 
-        <div class="chart-container glass p-2 shadow-2xl relative">
-            <div id="tradingview_gold" class="w-full h-full rounded-xl"></div>
+        <div class="chart-container glass p-3 shadow-2xl relative bg-[#10151d]">
+            <!-- TradingView Toolbar Header -->
+            <div class="flex items-center justify-between px-4 py-2 mb-2 border-b border-white/5">
+                <div class="flex items-center gap-3">
+                    <span class="w-2.5 h-2.5 rounded-full bg-[#00E5A8]"></span>
+                    <span class="font-bold text-sm text-white font-['Orbitron']">OANDA:XAUUSD</span>
+                    <span class="text-xs text-gray-400 bg-white/5 px-2 py-0.5 rounded">مباشر</span>
+                </div>
+                <div class="flex items-center gap-2 text-gray-400 text-xs">
+                    <button onclick="location.reload()" class="hover:text-white p-1.5 rounded-lg bg-white/5 transition-all" title="تحديث الشارت"><i class="fas fa-rotate"></i></button>
+                </div>
+            </div>
+            <div id="tradingview_gold" class="w-full h-[calc(100%-45px)] rounded-xl overflow-hidden"></div>
         </div>
     </main>
 
@@ -272,7 +341,7 @@
                 if (days <= 0) {
                     isExpired = true;
                     document.getElementById('daysCount').innerText = 'EXPIRED';
-                    document.getElementById('daysCount').className = "bg-red-600/20 text-red-400 px-2 py-1 rounded-md text-[10px] font-bold font-[Orbitron]";
+                    document.getElementById('daysCount').className = "bg-[#ff4d5a]/20 text-[#ff4d5a] px-2.5 py-1 rounded-lg text-[10px] font-bold font-[Orbitron] border border-[#ff4d5a]/30";
                     document.getElementById('subscriptionLock').classList.add('active');
                     document.getElementById('historyNavBtn').style.opacity = '0.3';
                     document.getElementById('historyNavBtn').style.cursor = 'not-allowed';
@@ -304,8 +373,8 @@
         function renderHistory() {
             if (isExpired) return;
             document.getElementById('historyList').innerHTML = history.map(s => `
-                <div class="p-3 rounded-xl bg-white/5 border-r-4 text-right" style="border-color: ${s.c}">
-                    <div class="flex justify-between items-center"><span class="font-bold text-sm" style="color:${s.c}">${s.t}</span><span class="text-[9px] opacity-50">${s.time}</span></div>
+                <div class="p-3.5 rounded-xl bg-white/5 border-r-4 text-right shadow-sm" style="border-color: ${s.c}">
+                    <div class="flex justify-between items-center"><span class="font-bold text-sm" style="color:${s.c}">${s.t}</span><span class="text-[10px] text-gray-400 font-mono">${s.time}</span></div>
                 </div>`).join('');
         }
 
@@ -354,20 +423,20 @@
                 // بناء التوصية الأكثر ضماناً بناءً على قراءة السيولة الحقيقية المتدفقة فوراً
                 if (buyPercentage >= 58) {
                     finalStrength = Math.round(buyPercentage);
-                    decision = {t: `إشارة شراء قوية الآن 📈 (${currentPrice.toFixed(2)})`, c: "#10b981"};
+                    decision = {t: `إشارة شراء قوية الآن 📈 (${currentPrice.toFixed(2)})`, c: "#00E5A8"};
                 } else if (buyPercentage > 51 && buyPercentage < 58) {
                     finalStrength = Math.round(buyPercentage);
-                    decision = {t: `فرصة شراء فرعية قائمة 🌤️ (${currentPrice.toFixed(2)})`, c: "#059669"};
+                    decision = {t: `فرصة شراء فرعية قائمة 🌤️ (${currentPrice.toFixed(2)})`, c: "#00C2FF"};
                 } else if (sellPercentage >= 58) {
                     finalStrength = Math.round(sellPercentage);
-                    decision = {t: `إشارة بيع فورية الآن 📉 (${currentPrice.toFixed(2)})`, c: "#ef4444"};
+                    decision = {t: `إشارة بيع فورية الآن 📉 (${currentPrice.toFixed(2)})`, c: "#ff4d5a"};
                 } else if (sellPercentage > 51 && sellPercentage < 58) {
                     finalStrength = Math.round(sellPercentage);
-                    decision = {t: `فرصة بيع فرعية قائمة 🌧️ (${currentPrice.toFixed(2)})`, c: "#dc2626"};
+                    decision = {t: `فرصة بيع فرعية قائمة 🌧️ (${currentPrice.toFixed(2)})`, c: "#ffb300"};
                 } else {
                     // إذا كان السوق متقارب جداً 50% مقابل 50%
                     finalStrength = Math.round(Math.max(buyPercentage, sellPercentage));
-                    decision = {t: `السوق عرضي.. ترقب نقطة الدخول ⏳ (${currentPrice.toFixed(2)})`, c: "#f59e0b"};
+                    decision = {t: `السوق عرضي.. ترقب نقطة الدخول ⏳ (${currentPrice.toFixed(2)})`, c: "#ffb300"};
                 }
 
                 // عرض نسبة قوة الاتجاه الحقيقية ومطابقتها للتوصية والألوان
@@ -380,7 +449,7 @@
             } catch (error) {
                 console.error("OrderBook Logic Error:", error);
                 textEl.innerText = "جاري فحص أحجام التداول ومزامنة الرادار...";
-                textEl.style.color = "#00d2ff";
+                textEl.style.color = "#00C2FF";
             }
         }
 
@@ -411,64 +480,38 @@
     </script>
 
 <script>
-
 function logout() {
-    // 1. مسح بيانات المستخدم من الـ LocalStorage
     localStorage.removeItem('prime_user_name');
     localStorage.removeItem('prime_user_phone');
-    
-    // 2. إذا كنت بتستخدم تسجيل دخول Firebase الحقيقي (اختياري لو مفعله)
-    // firebase.auth().signOut(); 
-
-    // 3. توجيه المستخدم لصفحة تسجيل الدخول (عدل اسم الصفحة حسب مشروعك)
     window.location.href = 'login.html'; 
 }
-
-    
 </script>
 
-
-
-
-
 <script>
-
-// فرضاً إن الـ HTML element بتاع التنبيه واخد id="market-alert"
 const alertElement = document.getElementById('market-alert');
 
 function updateMarketStatus(directionStrength) {
     if (directionStrength < 60) {
-        // إظهار التنبيه وتحذير المستخدم
         alertElement.innerHTML = `⚠️ مخاطرة: تجنب الإشارات الأقل من 60%`;
-        alertElement.style.color = `#ff4a4a`; // لون أحمر متناسق مع ثيم الموقع
+        alertElement.style.color = `#ff4d5a`;
         alertElement.style.display = `block`;
     } else {
-        // إخفاء التنبيه أو تبديله برسالة أمان
         alertElement.innerHTML = `✅ اتجاه قوي: الإشارة مدعومة بالسوق`;
-        alertElement.style.color = `#00e676`; // لون أخضر نيوني
-        // لو مش عايز تظهر حاجة خالص والنسبة مأمنة فكك من السطر اللي فوق واعملها hide:
-        // alertElement.style.display = `none`;
+        alertElement.style.color = `#00E5A8`;
     }
 }
 
-// مثال للتشغيل عند التحديث:
-updateMarketStatus(56); // النسبة الحالية في صورتك 56% فهتظهر التحذير فوراً
-
-
-    
+updateMarketStatus(56);
 </script>
-<script> 
 
-// --- تشغيل بانر الإحصائيات الذكي مع خاصية الـ Swipe الحركية ---
+<script> 
 const banner = document.getElementById("statsBanner");
 if (banner) {
-    // 1. إظهار البانر بأنيميشن سلس بعد ثانية واحدة من تحميل البيانات
     setTimeout(() => {
         banner.style.transform = "translateX(-50%) translateY(0)";
         banner.style.opacity = "1";
     }, 1000);
 
-    // 2. تفعيل الإغلاق التلقائي بعد 10 ثواني كاملة من الظهور
     const autoCloseTimeout = setTimeout(() => {
         dismissBanner("down");
     }, 11000);
@@ -477,7 +520,6 @@ if (banner) {
     let startX = 0, startY = 0;
     let currentX = 0, currentY = 0;
 
-    // أحداث التحكم بالسحب (ماوس وتاتش الموبايل)
     banner.addEventListener("mousedown", dragStart);
     banner.addEventListener("touchstart", dragStart, { passive: true });
     window.addEventListener("mousemove", dragMove);
@@ -487,8 +529,8 @@ if (banner) {
 
     function dragStart(e) {
         isDragging = true;
-        clearTimeout(autoCloseTimeout); // إيقاف التايمر التلقائي بمجرد تفاعل المستخدم
-        banner.style.transition = "none"; // إيقاف الأنيميشن المؤقت للاستجابة الفورية للسحب
+        clearTimeout(autoCloseTimeout);
+        banner.style.transition = "none";
         
         startX = e.type === "touchstart" ? e.touches[0].clientX : e.clientX;
         startY = e.type === "touchstart" ? e.touches[0].clientY : e.clientY;
@@ -503,7 +545,6 @@ if (banner) {
         currentX = clientX - startX;
         currentY = clientY - startY;
 
-        // تطبيق الإزاحة الحركية مع الحفاظ على توسيط الـ X في الشاشة
         banner.style.transform = `translate(calc(-50% + ${currentX}px), ${currentY}px)`;
     }
 
@@ -512,9 +553,8 @@ if (banner) {
         isDragging = false;
         banner.style.transition = "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)"; 
 
-        const limit = 80; // المسافة بالبكسل لاعتبار السحبة أمر إغلاق
+        const limit = 80;
 
-        // فحص اتجاه السحب لتحديد مسار الاختفاء بره الشاشة
         if (currentY < -limit) {
             dismissBanner("up");
         } else if (currentX > limit) {
@@ -522,7 +562,6 @@ if (banner) {
         } else if (currentX < -limit) {
             dismissBanner("left");
         } else {
-            // لو السحبة بسيطة يرجع لمكانه بـ تأثير مرن
             banner.style.transform = "translateX(-50%) translateY(0)";
         }
     }
@@ -535,19 +574,16 @@ if (banner) {
         if (direction === "up") {
             banner.style.transform = "translateX(-50%) translateY(-100vh)";
         } else if (direction === "right") {
-            banner.style.transform = "translate(100vw, ${currentY}px)";
+            banner.style.transform = `translate(100vw, ${currentY}px)`;
         } else if (direction === "left") {
-            banner.style.transform = "translate(-100vw, ${currentY}px)";
+            banner.style.transform = `translate(-100vw, ${currentY}px)`;
         } else {
-            // النزول لأسفل الافتراضي
             banner.style.transform = "translateX(-50%) translateY(200px)";
         }
 
-        setTimeout(() => banner.remove(), 400); // تدمير العنصر تماماً بعد الأنيميشن
+        setTimeout(() => banner.remove(), 400);
     }
 }
-
-  
 </script>
         
 </body>
