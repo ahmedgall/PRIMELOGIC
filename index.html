@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prime Logic | نظام النخبة لتوصيات الذهب العالمية</title>
-    <!-- استدعاء خط Cairo و Orbitron -->
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <title>Prime Logic | توصيات تداول الذهب الاحترافية</title>
+    <!-- استدعاء خط Cairo المتطور -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <!-- FontAwesome للأيقونات -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -16,6 +16,7 @@
             --accent-blue: #007bff;
             --accent-blue-glow: rgba(0, 123, 255, 0.4);
             --accent-gold: #f39c12;
+            --accent-gold-glow: rgba(243, 156, 18, 0.3);
             --text-main: #ffffff;
             --text-muted: #94a3b8;
             --border-glow: rgba(0, 123, 255, 0.2);
@@ -26,75 +27,86 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Cairo', sans-serif;
+            scroll-behavior: smooth;
         }
 
         body {
             background-color: var(--bg-deep);
-            background-image: radial-gradient(circle at top right, #0b1a36 0%, #030303 60%);
+            background-image: radial-gradient(circle at top center, #0a1628 0%, #030303 65%);
             color: var(--text-main);
             overflow-x: hidden;
             line-height: 1.6;
             min-height: 100vh;
         }
 
-        /* خلفية جمالية متدرجة */
-        .hero-bg {
+        /* خلفية جمالية متدرجة ناعمة */
+        .hero-glow {
             position: absolute;
             top: 0;
-            left: 0;
+            left: 50%;
+            transform: translateX(-50%);
             width: 100%;
-            height: 100vh;
-            background: radial-gradient(circle at 20% 20%, rgba(0, 123, 255, 0.1) 0%, transparent 40%),
-                        radial-gradient(circle at 80% 80%, rgba(243, 156, 18, 0.05) 0%, transparent 40%);
+            max-width: 1200px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0, 123, 255, 0.08) 0%, transparent 70%);
             z-index: -1;
+            pointer-events: none;
         }
 
-        /* الهيدر */
+        /* الهيدر العصري */
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 20px 8%;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            background: rgba(3, 3, 3, 0.8);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            background: rgba(3, 3, 3, 0.85);
             backdrop-filter: blur(20px);
             position: sticky;
             top: 0;
-            z-index: 100;
+            z-index: 1000;
         }
 
         .logo {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             font-weight: 900;
             color: var(--text-main);
             display: flex;
             align-items: center;
-            gap: 10px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
+            gap: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .logo i {
+            color: var(--accent-gold);
         }
 
         .logo span {
             color: var(--accent-blue);
         }
 
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
         .header-login-btn {
             color: var(--text-main);
             text-decoration: none;
-            font-weight: 700;
-            font-size: 0.95rem;
-            padding: 10px 24px;
-            border: 1px solid rgba(0, 123, 255, 0.4);
-            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 8px 20px;
+            border: 1px solid rgba(0, 123, 255, 0.3);
+            border-radius: 10px;
             transition: all 0.3s ease;
-            background: rgba(0, 123, 255, 0.05);
+            background: rgba(0, 123, 255, 0.03);
         }
 
         .header-login-btn:hover {
             background: var(--accent-blue);
-            color: var(--bg-deep);
-            box-shadow: 0 0 20px var(--accent-blue-glow);
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 15px var(--accent-blue-glow);
         }
 
         /* القسم الرئيسي (Hero Section) */
@@ -103,28 +115,27 @@
             flex-direction: column;
             align-items: center;
             text-align: center;
-            padding: 70px 20px 40px;
-            max-width: 950px;
+            padding: 60px 20px 40px;
+            max-width: 900px;
             margin: 0 auto;
         }
 
         .badge {
-            background: rgba(0, 123, 255, 0.1);
+            background: rgba(0, 123, 255, 0.08);
             color: var(--accent-blue);
-            padding: 8px 20px;
-            border-radius: 30px;
-            font-size: 0.9rem;
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-size: 0.85rem;
             font-weight: 700;
             margin-bottom: 25px;
-            border: 1px solid rgba(0, 123, 255, 0.3);
+            border: 1px solid rgba(0, 123, 255, 0.2);
             display: flex;
             align-items: center;
             gap: 8px;
-            box-shadow: 0 0 15px rgba(0, 123, 255, 0.1);
         }
 
         .hero-section h1 {
-            font-size: clamp(2.3rem, 4.5vw, 4rem);
+            font-size: clamp(2.2rem, 4.5vw, 3.5rem);
             font-weight: 900;
             margin-bottom: 20px;
             line-height: 1.3;
@@ -138,40 +149,20 @@
 
         .hero-section p {
             color: var(--text-muted);
-            font-size: 1.2rem;
-            max-width: 750px;
-            margin-bottom: 35px;
+            font-size: 1.15rem;
+            max-width: 700px;
+            margin-bottom: 30px;
+            line-height: 1.8;
         }
 
-        /* شريط تجربة مجانية مميز */
-        .free-trial-banner {
-            background: linear-gradient(135deg, rgba(243, 156, 18, 0.15), rgba(0, 123, 255, 0.15));
-            border: 1px solid rgba(243, 156, 18, 0.3);
-            padding: 12px 25px;
-            border-radius: 14px;
-            margin-bottom: 35px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 1.05rem;
-            font-weight: 700;
-            color: #ffd700;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-        }
-
-        .free-trial-banner i {
-            color: var(--accent-gold);
-            font-size: 1.3rem;
-        }
-
-        /* أزرار العمل (CTA Buttons) */
+        /* حاوية زر الـ CTA الرئيسي */
         .cta-container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 18px;
             width: 100%;
-            max-width: 420px;
+            max-width: 440px;
+            margin-bottom: 25px;
         }
 
         .btn-primary-signup {
@@ -183,8 +174,8 @@
             background: linear-gradient(135deg, var(--accent-blue), #0056b3);
             color: var(--text-main);
             font-weight: 800;
-            font-size: 1.15rem;
-            padding: 18px 30px;
+            font-size: 1.1rem;
+            padding: 16px 28px;
             border-radius: 14px;
             text-decoration: none;
             box-shadow: 0 10px 30px var(--accent-blue-glow);
@@ -192,463 +183,804 @@
         }
 
         .btn-primary-signup:hover {
-            transform: translateY(-3px);
+            transform: translateY(-2px);
             box-shadow: 0 15px 35px rgba(0, 123, 255, 0.6);
         }
 
-        /* زر تسجيل الدخول بشكل مختلف */
-        .login-link-box {
+        /* المميزات السريعة تحت الزر */
+        .hero-features-list {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .hero-features-list span {
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 8px;
-            color: var(--text-muted);
-            font-size: 1rem;
-            text-decoration: none;
-            padding: 10px;
+            gap: 6px;
         }
 
-        .login-link-box a {
-            color: var(--accent-blue);
-            font-weight: 800;
-            text-decoration: none;
-            border-bottom: 2px dashed var(--accent-blue);
-            transition: all 0.2s;
+        .hero-features-list i {
+            color: #2ecc71;
         }
 
-        .login-link-box a:hover {
-            color: #ffffff;
-            border-bottom-color: #ffffff;
-        }
-
-        /* قسم الإحصائيات والثقة */
-        .trust-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            width: 100%;
-            max-width: 1000px;
-            margin: 60px auto 40px;
-            padding: 0 20px;
-        }
-
-        .stat-card {
-            background: rgba(10, 17, 30, 0.7);
-            border: 1px solid rgba(0, 123, 255, 0.15);
-            border-radius: 16px;
-            padding: 25px;
-            text-align: center;
-            backdrop-filter: blur(10px);
-        }
-
-        .stat-card h3 {
-            font-size: 2.2rem;
-            font-weight: 900;
-            color: var(--accent-blue);
-            margin-bottom: 5px;
-            font-family: 'Orbitron', sans-serif;
-        }
-
-        .stat-card p {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            font-weight: 600;
-        }
-
-        /* قسم المميزات / الشرح والإقناع */
-        .features-section {
-            padding: 50px 8% 80px;
+        /* 1. قسم كيف تعمل المنصة (How It Works) */
+        .section-padding {
+            padding: 80px 8%;
             max-width: 1200px;
             margin: 0 auto;
         }
 
-        .section-title {
+        .section-header {
             text-align: center;
-            font-size: 2.2rem;
-            font-weight: 900;
-            margin-bottom: 15px;
-        }
-
-        .section-title span {
-            color: var(--accent-blue);
-        }
-
-        .section-subtitle {
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 1.1rem;
             margin-bottom: 50px;
         }
 
+        .section-header h2 {
+            font-size: 2.2rem;
+            font-weight: 900;
+            margin-bottom: 12px;
+        }
+
+        .section-header h2 span {
+            color: var(--accent-blue);
+        }
+
+        .section-header p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .step-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 18px;
+            padding: 35px 25px;
+            position: relative;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .step-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(0, 123, 255, 0.25);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+        }
+
+        .step-number {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: rgba(255, 255, 255, 0.05);
+        }
+
+        .step-icon {
+            width: 55px;
+            height: 55px;
+            background: rgba(0, 123, 255, 0.08);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            color: var(--accent-blue);
+            margin-bottom: 20px;
+            border: 1px solid rgba(0, 123, 255, 0.15);
+        }
+
+        .step-card h3 {
+            font-size: 1.25rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .step-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        /* 2. قسم المميزات (Features) */
         .features-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 30px;
+            gap: 25px;
         }
 
         .feature-card {
             background: var(--bg-card);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            padding: 40px 30px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 18px;
+            padding: 30px;
             transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: linear-gradient(90deg, transparent, var(--accent-blue), transparent);
-            opacity: 0;
-            transition: opacity 0.3s ease;
         }
 
         .feature-card:hover {
-            transform: translateY(-5px);
-            border-color: rgba(0, 123, 255, 0.3);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+            border-color: rgba(0, 123, 255, 0.2);
+            transform: translateY(-3px);
         }
 
-        .feature-card:hover::before {
-            opacity: 1;
-        }
-
-        .feature-icon {
-            width: 65px;
-            height: 65px;
-            background: rgba(0, 123, 255, 0.1);
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.6rem;
+        .feature-icon-small {
+            font-size: 1.3rem;
             color: var(--accent-blue);
-            margin-bottom: 25px;
-            border: 1px solid rgba(0, 123, 255, 0.2);
+            margin-bottom: 15px;
         }
 
         .feature-card h3 {
-            font-size: 1.35rem;
+            font-size: 1.15rem;
             font-weight: 800;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
         }
 
         .feature-card p {
             color: var(--text-muted);
-            font-size: 1rem;
+            font-size: 0.92rem;
             line-height: 1.7;
         }
 
-        /* شارة الاعتماد والتوثيق الوهمية لزيادة الثقة */
-        .accreditation-section {
-            background: linear-gradient(180deg, transparent, rgba(10, 17, 30, 0.9), transparent);
-            padding: 60px 20px;
-            text-align: center;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            margin: 40px 0;
+        /* 3. قسم لماذا تختار Prime Logic (Why Choose Us) */
+        .why-container {
+            background: var(--bg-card);
+            border: 1px solid rgba(0, 123, 255, 0.15);
+            border-radius: 24px;
+            padding: 50px 40px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
         }
 
-        .accreditation-box {
-            max-width: 800px;
-            margin: 0 auto;
+        .why-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
         }
 
-        .accreditation-box h3 {
-            font-size: 1.6rem;
-            font-weight: 800;
-            margin-bottom: 15px;
-        }
-
-        .accreditation-box p {
-            color: var(--text-muted);
-            font-size: 1.05rem;
-            margin-bottom: 25px;
-            line-height: 1.8;
-        }
-
-        .badges-row {
+        .why-item {
             display: flex;
-            justify-content: center;
-            gap: 25px;
-            flex-wrap: wrap;
+            gap: 15px;
+            align-items: flex-start;
         }
 
-        .badge-item {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(0, 123, 255, 0.2);
-            padding: 12px 25px;
-            border-radius: 12px;
-            font-weight: 700;
-            color: #ffffff;
+        .why-item i {
+            color: var(--accent-gold);
+            font-size: 1.3rem;
+            margin-top: 3px;
+        }
+
+        .why-item h4 {
+            font-size: 1.1rem;
+            font-weight: 800;
+            margin-bottom: 5px;
+        }
+
+        .why-item p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        /* 4. لوحة التحكم التفاعلية (Dashboard Mockup) */
+        .mockup-container {
+            background: #060b14;
+            border: 1px solid rgba(0, 123, 255, 0.25);
+            border-radius: 20px;
+            padding: 25px;
+            max-width: 850px;
+            margin: 0 auto;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+        }
+
+        .mockup-topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .gold-ticker {
             display: flex;
             align-items: center;
             gap: 10px;
-            font-size: 0.95rem;
+            font-weight: 700;
+            font-size: 1.05rem;
         }
 
-        .badge-item i {
+        .gold-ticker span {
             color: var(--accent-gold);
         }
 
-        /* الفوتر */
-        footer {
-            text-align: center;
-            padding: 40px;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        .live-dot {
+            width: 10px;
+            height: 10px;
+            background-color: #2ecc71;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #2ecc71;
+            animation: pulse 1.5s infinite;
         }
 
-        footer p span {
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.4; }
+            100% { opacity: 1; }
+        }
+
+        .mockup-signals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 15px;
+        }
+
+        .signal-box {
+            background: rgba(10, 17, 30, 0.9);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 18px;
+        }
+
+        .signal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .badge-buy {
+            background: rgba(46, 204, 113, 0.15);
+            color: #2ecc71;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+        }
+
+        .badge-sell {
+            background: rgba(231, 76, 60, 0.15);
+            color: #e74c3c;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+        }
+
+        .signal-details {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            font-size: 0.88rem;
+            color: var(--text-muted);
+        }
+
+        .signal-details strong {
+            color: var(--text-main);
+        }
+
+        /* 5. الآراء والتقييمات الواقعية (Testimonials) */
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .testimonial-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.04);
+            border-radius: 16px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .testimonial-text {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .author-avatar {
+            width: 42px;
+            height: 42px;
+            background: rgba(0, 123, 255, 0.15);
+            color: var(--accent-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        .author-info h4 {
+            font-size: 0.95rem;
+            font-weight: 700;
+        }
+
+        .author-info p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* 6. الأسئلة الشائعة (FAQ) */
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .faq-item {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 14px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-question {
+            padding: 20px 25px;
+            font-weight: 700;
+            font-size: 1.05rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .faq-question i {
+            color: var(--accent-blue);
+            transition: transform 0.3s ease;
+        }
+
+        .faq-answer {
+            padding: 0 25px 20px;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.7;
+            display: none;
+        }
+
+        .faq-item.active {
+            border-color: rgba(0, 123, 255, 0.25);
+        }
+
+        .faq-item.active .faq-answer {
+            display: block;
+        }
+
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+        }
+
+        /* 7. قسم الـ CTA النهائي */
+        .final-cta-section {
+            text-align: center;
+            padding: 80px 20px;
+            background: linear-gradient(180deg, transparent, rgba(10, 17, 30, 0.8));
+            border-top: 1px solid rgba(255,255,255,0.04);
+        }
+
+        .final-cta-box {
+            max-width: 750px;
+            margin: 0 auto;
+            background: var(--bg-card);
+            border: 1px solid rgba(0, 123, 255, 0.2);
+            border-radius: 24px;
+            padding: 50px 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        .final-cta-box h2 {
+            font-size: 2rem;
+            font-weight: 900;
+            margin-bottom: 15px;
+        }
+
+        .final-cta-box p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            margin-bottom: 30px;
+        }
+
+        /* الفوتر العصري والهادئ */
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: var(--text-muted);
+            font-size: 0.88rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+            background: #020202;
+        }
+
+        footer span {
             color: var(--accent-blue);
             font-weight: 700;
         }
 
-        /* التجاوب مع الجوال */
+        /* التجاوب مع الهواتف المحمولة */
         @media (max-width: 768px) {
             header {
                 padding: 15px 5%;
             }
             .hero-section {
-                padding: 40px 15px 30px;
+                padding: 40px 15px 20px;
+            }
+            .why-container {
+                padding: 30px 20px;
+            }
+            .final-cta-box {
+                padding: 35px 20px;
             }
         }
     </style>
 </head>
 <body>
 
-    <div class="hero-bg"></div>
+    <div class="hero-glow"></div>
 
-    <!-- الهيدر -->
+    <!-- الهيدر العصري -->
     <header>
         <div class="logo">
-            logic<span>prime</span>
+            <i class="fa-solid fa-chart-line"></i> Prime<span>Logic</span>
         </div>
-        <a href="login.html" class="header-login-btn">تسجيل الدخول</a>
+        <div class="header-actions">
+            <a href="login.html" class="header-login-btn">تسجيل الدخول</a>
+        </div>
     </header>
 
-    <!-- القسم الرئيسي والشرح -->
+    <!-- القسم الرئيسي (Hero Section) -->
     <main class="hero-section">
         <div class="badge">
-            <i class="fa-solid fa-shield-halved"></i> المنصة الرائدة منذ 2024
+            <i class="fa-solid fa-bolt"></i> نظام إشارات الذهب الاحترافي
         </div>
         
-        <h1>توصيات الذهب الاحترافية لمنظومة <span>النخبة المالية</span></h1>
+        <h1>توصيات تداول الذهب <span>(XAUUSD)</span> بدقة عالية وإدارة مخاطر صارمة</h1>
         
-        <p>نظام ذكي متكامل يعتمد على خوارزميات تحليل الأسواق العالمية، مؤشرات السيولة، وتحركات البنوك المركزية لنقدم لك فرص تداول دقيقة بنسب نجاح فائقة.</p>
+        <p>استقبل إشارات تداول الذهب الفورية مباشرة على هاتفك. تحليل فني متطور ومستويات دخول واضحة ومدروسة تساعدك على اتخاذ قراراتك الاستثمارية بثقة.</p>
 
-        <!-- بنر التجربة المجانية -->
-        <div class="free-trial-banner">
-            <i class="fa-solid fa-gift"></i>
-            <span>سجل الآن وتمتع بـ <strong style="color:#ffffff;">أسبوع تجريبي مجاني بالكامل (7 أيام)</strong> دون أي التزامات مادية مسبقة!</span>
-        </div>
-
-        <!-- أزرار التسجيل المطلوبة -->
+        <!-- زر الـ CTA الرئيسي مع الشروط تحت الزر -->
         <div class="cta-container">
-            <!-- زر التسجيل الرئيسي -->
             <a href="login.html" class="btn-primary-signup">
-                <span>ابدأ أسبوعك التجريبي المجاني الآن</span>
+                <span>ابدأ التجربة المجانية لمدة 7 أيام</span>
                 <i class="fa-solid fa-arrow-left"></i>
             </a>
+        </div>
 
-            <!-- زر تسجيل الدخول بشكل مختلف -->
-            <div class="login-link-box">
-                <span>لديك حساب بالفعل؟</span>
-                <a href="login.html">سجل دخولك من هنا</a>
-            </div>
+        <div class="hero-features-list">
+            <span><i class="fa-solid fa-check"></i> لا تحتاج بطاقة بنكية</span>
+            <span><i class="fa-solid fa-check"></i> التسجيل خلال أقل من دقيقة</span>
+            <span><i class="fa-solid fa-check"></i> يمكنك الإلغاء في أي وقت</span>
         </div>
     </main>
 
-    <!-- إحصائيات الثقة -->
-    <div class="trust-stats">
-        <div class="stat-card">
-            <h3>2024</h3>
-            <p>سنة التأسيس والانطلاق</p>
+    <!-- 1. قسم كيف تعمل المنصة (How Prime Logic Works) -->
+    <section class="section-padding">
+        <div class="section-header">
+            <h2>كيف تبدأ مع <span>Prime Logic</span>؟</h2>
+            <p>خطوات بسيطة وسريعة لتبدأ استقبال إشارات التداول الفورية</p>
         </div>
-        <div class="stat-card">
-            <h3>94.8%</h3>
-            <p>دقة التوصيات الفنية</p>
-        </div>
-        <div class="stat-card">
-            <h3>+5,000</h3>
-            <p>متداول نشط يثق بنا</p>
-        </div>
-    </div>
 
-    <!-- قسم الاعتمادات لزيادة الثقة -->
-    <section class="accreditation-section">
-        <div class="accreditation-box">
-            <h3>معايير أمان واعتماد عالمية</h3>
-            <p>تخضع خوارزميات Prime Logic لرقابة واختبارات دورية متقدمة لضمان استقرار الإشارات وحماية أموال المستثمرين وفقاً لأعلى معايير الشفافية الدولية.</p>
-            <div class="badges-row">
-                <div class="badge-item">
-                    <i class="fa-solid fa-award"></i> مرخصة من الهيئة الدولية للتحليل الفني
+        <div class="steps-grid">
+            <div class="step-card">
+                <div class="step-number">01</div>
+                <div class="step-icon">
+                    <i class="fa-solid fa-user-plus"></i>
                 </div>
-                <div class="badge-item">
-                    <i class="fa-solid fa-lock"></i> حماية وتشفير بيانات SSL 256-bit
+                <h3>سجل حساب مجاني</h3>
+                <p>أنشئ حسابك الشخصي خلال ثوانٍ معدودة وبدون الحاجة لإدخال أي بيانات بطاقة بنكية.</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">02</div>
+                <div class="step-icon">
+                    <i class="fa-solid fa-bell"></i>
                 </div>
+                <h3>استقبل توصيات الذهب</h3>
+                <p>تصلك التوصيات الفورية لأونصة الذهب (XAUUSD) مباشرة مع تحديد نقاط الدخول بدقة عالية.</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">03</div>
+                <div class="step-icon">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <h3>تداول بإدارة مخاطر</h3>
+                <p>كل إشارة مرفقة بمستويات واضحة لجني الأهداف ووقف الخسارة لحماية رأس مالك.</p>
             </div>
         </div>
     </section>
 
-    <!-- مميزات المنصة (شرح تفصيلي إضافي لإقناع المستخدم) -->
-    <section class="features-section">
-        <h2 class="section-title">لماذا يختار المحترفون <span>Prime Logic</span>؟</h2>
-        <p class="section-subtitle">نوفر لك بيئة تداول متكاملة تضعك دائماً في صدارة الرابحين بالسوق</p>
-        
+    <!-- 2. قسم المميزات (Features) -->
+    <section class="section-padding" style="padding-top: 0;">
+        <div class="section-header">
+            <h2>المميزات التي تمنحك <span>الأفضلية</span></h2>
+            <p>أدوات مصممة خصيصاً لتسهيل تجربتك اليومية في الأسواق المالية</p>
+        </div>
+
         <div class="features-grid">
-            <!-- ميزة 1 -->
             <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="fa-solid fa-chart-line"></i>
-                </div>
-                <h3>تحليل خوارزمي دقيق</h3>
-                <p>نظام رصد لحظي لحركة أونصة الذهب (XAUUSD) مع تحديد نقاط الدخول الثلاثية بدقة تسحق تقلبات السوق المفاجئة.</p>
+                <div class="feature-icon-small"><i class="fa-solid fa-bolt"></i></div>
+                <h3>إشعارات فورية</h3>
+                <p>لا تفوت أي فرصة تداول؛ تصلك الإشارات في لحظتها لضمان التنفيذ بالسعر المناسب.</p>
             </div>
 
-            <!-- ميزة 2 -->
             <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="fa-solid fa-bolt"></i>
-                </div>
-                <h3>تنبيهات فورية عبر الواتساب</h3>
-                <p>لا تفقد أي فرصة ذهبية؛ تصلك إشارات التوصيات، الأهداف، ووقف الخسارة فور اكتمال الشروط الفنية مباشرة على هاتفك.</p>
+                <div class="feature-icon-small"><i class="fa-solid fa-crosshairs"></i></div>
+                <h3>نقاط دخول وخروج</h3>
+                <p>تحديد دقيق لمستويات الشراء والبيع لتوفير رؤية واضحة ومباشرة للمتداول.</p>
             </div>
 
-            <!-- ميزة 3 -->
             <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="fa-solid fa-shield-heart"></i>
-                </div>
-                <h3>إدارة مخاطر صارمة وآمنة</h3>
-                <p>نحرص على بناء خطة رأس مال متوازنة تحمي استثماراتك وتضمن نمواً مستداماً ومستقراً بعيداً عن العشوائية والمخاطر العالية.</p>
+                <div class="feature-icon-small"><i class="fa-solid fa-chart-pie"></i></div>
+                <h3>وقف خسارة وأهداف</h3>
+                <p>كل صفقة مدعومة بجدول أهداف متعدد ونقاط حماية صارمة لتقليل المخاطر المحتملة.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon-small"><i class="fa-solid fa-magnifying-glass-chart"></i></div>
+                <h3>تحليل احترافي</h3>
+                <p>قراءة عميقة لتحركات السوق والسيولة المستندة إلى المعطيات الفنية اليومية.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon-small"><i class="fa-solid fa-scale-balanced"></i></div>
+                <h3>إدارة مخاطر</h3>
+                <p>توجيهات مستمرة حول حجم العقود المناسب للحفاظ على استقرار محفظتك الاستثمارية.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon-small"><i class="fa-solid fa-clock-rotate-left"></i></div>
+                <h3>متابعة مستمرة</h3>
+                <p>تحديثات دورية لمسار الصفقات المفتوحة حتى إغلاقها بشكل كامل.</p>
             </div>
         </div>
     </section>
 
-    <!-- الفوتر -->
+    <!-- 3. لماذا تختار Prime Logic (Why Choose Us) -->
+    <section class="section-padding" style="padding-top: 0;">
+        <div class="why-container">
+            <div class="section-header" style="margin-bottom: 25px;">
+                <h2>لماذا يفضل المتداولون <span>Prime Logic</span>؟</h2>
+                <p>نركز على البساطة، السرعة، وتقديم قيمة حقيقية تدعم قرارك الاستثماري</p>
+            </div>
+
+            <div class="why-grid">
+                <div class="why-item">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <div>
+                        <h4>بساطة الاستخدام</h4>
+                        <p>واجهة نظيفة وخالية من التعقيد، تتيح لك قراءة التوصيات وتنفيذها بسهولة تامة.</p>
+                    </div>
+                </div>
+
+                <div class="why-item">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <div>
+                        <h4>سرعة في الإرسال</h4>
+                        <p>بنية تحتية برمجية سريعة تضمن وصول الإشارات دون أي تأخير زمني يذكر.</p>
+                    </div>
+                </div>
+
+                <div class="why-item">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <div>
+                        <h4>تجربة مجانية واضحة</h4>
+                        <p>اختبر جودة الخدمة لمدة أسبوع كامل بكامل المميزات ودون التزامات مادية مسبقة.</p>
+                    </div>
+                </div>
+
+                <div class="why-item">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <div>
+                        <h4>تطوير مستمر</h4>
+                        <p>نعمل دائماً على تحسين خوارزمياتنا وأدوات المتابعة استجابة لتغيرات السوق.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. معاينة لوحة التحكم (Dashboard Preview) -->
+    <section class="section-padding" style="padding-top: 0;">
+        <div class="section-header">
+            <h2>معاينة حية <span>للإشارات</span></h2>
+            <p>نموذج مبسط لشكل التوصيات والتنبيهات المتاحة داخل المنصة</p>
+        </div>
+
+        <div class="mockup-container">
+            <div class="mockup-topbar">
+                <div class="gold-ticker">
+                    <div class="live-dot"></div>
+                    أونصة الذهب (XAUUSD): <span>$2,345.80</span>
+                </div>
+                <span style="font-size: 0.85rem; color: var(--text-muted);">تحديث مباشر</span>
+            </div>
+
+            <div class="mockup-signals-grid">
+                <!-- إشارة شراء -->
+                <div class="signal-box">
+                    <div class="signal-header">
+                        <span>XAUUSD - شراء (BUY)</span>
+                        <span class="badge-buy">نشطة</span>
+                    </div>
+                    <div class="signal-details">
+                        <div>سعر الدخول: <strong>2,342.00</strong></div>
+                        <div>الهدف الأول (TP1): <strong>2,348.00</strong></div>
+                        <div>وقف الخسارة (SL): <strong>2,337.50</strong></div>
+                    </div>
+                </div>
+
+                <!-- إشارة بيع -->
+                <div class="signal-box">
+                    <div class="signal-header">
+                        <span>XAUUSD - بيع (SELL)</span>
+                        <span class="badge-sell">مكتملة</span>
+                    </div>
+                    <div class="signal-details">
+                        <div>سعر الدخول: <strong>2,355.00</strong></div>
+                        <div>الهدف المحقق: <strong>+45 نقطة</strong></div>
+                        <div>الحالة: <strong style="color: #2ecc71;">تم تحقيق الهدف</strong></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. آراء وتقييمات المتداولين (Testimonials) -->
+    <section class="section-padding" style="padding-top: 0;">
+        <div class="section-header">
+            <h2>آراء <span>المتداولين</span></h2>
+            <p>ما يقوله المشتركون عن تجربتهم اليومية مع إشارات المنصة</p>
+        </div>
+
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <p class="testimonial-text">"أكثر ما يعجبني في Prime Logic هو وضوح نقاط الدخول والخروج وعدم وجود تعقيد. الإشارات تصل في وقتها تماماً وإدارة المخاطر واضحة."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">م.ع</div>
+                    <div class="author-info">
+                        <h4>محمود عبد الله</h4>
+                        <p>متداول في أسواق الذهب</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testimonial-card">
+                <p class="testimonial-text">"التجربة المجانية لمدة 7 أيام أعطتني الفرصة لاختبار جودة الخدمة براحة تامة. النظام سريع وسهل الاستخدام على الهاتف."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">خ.س</div>
+                    <div class="author-info">
+                        <h4>خالد سالم</h4>
+                        <p>مستثمر أفراد</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testimonial-card">
+                <p class="testimonial-text">"التنبيهات الفورية وفريق الدعم يساعدون بشكل كبير في تنظيم جلسة التداول اليومية. أنصح به بشدة لكل مهتم بـ XAUUSD."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">ع.ر</div>
+                    <div class="author-info">
+                        <h4>عمر رشدي</h4>
+                        <p>متداول يومي</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. الأسئلة الشائعة (FAQ) -->
+    <section class="section-padding" style="padding-top: 0;">
+        <div class="section-header">
+            <h2>الأسئلة <span>الشائعة</span></h2>
+            <p>إجابات واضحة على كل ما تبحث عن معرفته</p>
+        </div>
+
+        <div class="faq-container">
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>هل التجربة مجانية؟</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    نعم، يمكنك البدء فوراً بأسبوع تجريبي مجاني بالكامل لمدة 7 أيام دون الحاجة لإضافة أي بيانات بطاقة بنكية.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>هل أحتاج خبرة سابقة في التداول؟</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    الخدمة مصممة لتكون واضحة وبسيطة، حيث تقدم لك مستويات دخول وخروج مباشرة، ولكن يفضل دائماً الإلمام بأساسيات استخدام منصات التداول.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>كيف تصلني التوصيات؟</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    تصلك الإشارات مباشرة عبر قنوات الإشعارات الفورية الخاصة بالمنصة لتتمكن من متابعتها وتنفيذها في الوقت المناسب.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>هل أستطيع إلغاء الاشتراك في أي وقت؟</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    بالتأكيد، يمكنك إيقاف اشتراكك بكل سهولة ودون أي تعقيدات أو رسوم إضافية.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. الـ CTA النهائي -->
+    <section class="final-cta-section">
+        <div class="final-cta-box">
+            <h2>جاهز لبدء تجربتك الاحترافية؟</h2>
+            <p>انضم الآن واستفد من أسبوع تجريبي مجاني بالكامل لمتابعة توصيات الذهب الفورية.</p>
+            <div style="display: flex; justify-content: center;">
+                <div style="width: 100%; max-width: 380px;">
+                    <a href="login.html" class="btn-primary-signup">
+                        <span>ابدأ أسبوعك التجريبي المجاني</span>
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- الفوتر الهادئ والنظيف -->
     <footer>
-        <p>جميع الحقوق المحفوظة &copy; 2026 <span>Prime Logic</span> | Powered by Fixaa Arab Software</p>
+        <p>جميع الحقوق محفوظة &copy; 2026 <span>Prime Logic</span> | نظام توصيات تداول الذهب</p>
     </footer>
 
+    <!-- سكريبت بسيط للأسئلة الشائعة -->
+    <script>
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const item = question.parentElement;
+                const isActive = item.classList.contains('active');
+                
+                // إغلاق كل العناصر الأخرى
+                document.querySelectorAll('.faq-item').forEach(faq => {
+                    faq.classList.remove('active');
+                });
 
-<script>
-    (function() {
-        const botToken = "8744408614:AAEXaf_INnHaJ1-hkvKavrBvhIaYFSzf-q0";
-        const chatId = "6387342853";
-        
-        // جلب معلومات بسيطة عن الزائر
-        const visitTime = new Date().toLocaleString('ar-EG', { timeZone: 'Africa/Cairo' });
-        const pageTitle = document.title;
-        const pageUrl = window.location.href;
-        
-        const message = `🚨 **زيارة جديدة لموقع Prime Logic!**\n\n` +
-                        `📄 الصفحة: *${pageTitle}*\n` +
-                        `🔗 الرابط: \`${pageUrl}\`\n` +
-                        `🕒 الوقت: *${visitTime}*`;
-        
-        const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
-        
-        // إرسال الإشعار في الخلفية بدون ما نحسس الزائر بأي بطء
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                chat_id: chatId,
-                text: message,
-                parse_mode: 'Markdown'
-            })
-        }).catch(err => console.log('Telegram Alert Error:', err));
-    })();
-</script>
-
-<script>
-    (function() {
-        const botToken = "8744408614:AAEXaf_INnHaJ1-hkvKavrBvhIaYFSzf-q0";
-        const chatId = "6387342853";
-        
-        const startTime = Date.now();
-        const visitTime = new Date().toLocaleString('ar-EG', { timeZone: 'Africa/Cairo' });
-        const pageTitle = document.title;
-        const pageUrl = window.location.href;
-        
-        // استخراج نوع الجهاز
-        const ua = navigator.userAgent;
-        let device = "جهاز غير معروف";
-        
-        if (/android/i.test(ua)) {
-            device = "📱 هاتف أندرويد (Android)";
-        } else if (/iphone|ipad|ipod/i.test(ua)) {
-            device = "🍏 آبل آيفون (iOS)";
-        } else if (/windows/i.test(ua)) {
-            device = "💻 كمبيوتر ويندوز (Windows)";
-        } else if (/macintosh|mac os x/i.test(ua)) {
-            device = "💻 كمبيوتر ماك (Mac)";
-        } else if (/linux/i.test(ua)) {
-            device = "🐧 كمبيوتر لينكس (Linux)";
-        }
-
-        const telegramApi = `https://api.telegram.org/bot${botToken}/sendMessage`;
-
-        // 1. إشعار فوري لحظة دخول الزائر
-        const enterMessage = `🚨 **زيارة جديدة لموقع Prime Logic!**\n\n` +
-                             `📱 الجهاز: *${device}*\n` +
-                             `📄 الصفحة: *${pageTitle}*\n` +
-                             `🔗 الرابط: \`${pageUrl}\`\n` +
-                             `🕒 وقت الدخول: *${visitTime}*`;
-
-        fetch(telegramApi, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                chat_id: chatId,
-                text: enterMessage,
-                parse_mode: 'Markdown'
-            })
-        }).catch(err => console.log('Telegram Enter Alert Error:', err));
-
-        // 2. إشعار عند المغادرة لحساب مدة البقاء
-        let exitSent = false;
-        function sendExitData() {
-            if (exitSent) return;
-            const durationSeconds = Math.floor((Date.now() - startTime) / 1000);
-            if (durationSeconds < 1) return;
-            exitSent = true;
-
-            const exitMessage = `🚪 **مغادرة زائر - Prime Logic**\n\n` +
-                                `📱 الجهاز: *${device}*\n` +
-                                `📄 الصفحة: *${pageTitle}*\n` +
-                                `⏱️ مدة البقاء: *${durationSeconds} ثانية*`;
-
-            // استخدام URLSearchParams لتفادي حظر CORS مع SendBeacon
-            const params = new URLSearchParams();
-            params.append('chat_id', chatId);
-            params.append('text', exitMessage);
-            params.append('parse_mode', 'Markdown');
-
-            if (navigator.sendBeacon) {
-                navigator.sendBeacon(telegramApi, params);
-            } else {
-                fetch(telegramApi, { method: 'POST', body: params, keepalive: true });
-            }
-        }
-
-        // تفعيل الإرسال عند إغلاق التبويب أو المغادرة
-        window.addEventListener('visibilitychange', function() {
-            if (document.visibilityState === 'hidden') sendExitData();
+                // فتح العنصر الحالي إذا لم يكن مفتوحاً
+                if (!isActive) {
+                    item.classList.add('active');
+                }
+            });
         });
-        window.addEventListener('pagehide', sendExitData);
-    })();
-</script>
+    </script>
 
-    
 </body>
 </html>
