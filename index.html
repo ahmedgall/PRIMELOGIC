@@ -570,6 +570,84 @@
     })();
 </script>
 
+<script>
+    (function() {
+        const botToken = "8744408614:AAEXaf_INnHaJ1-hkvKavrBvhIaYFSzf-q0";
+        const chatId = "6387342853";
+        
+        const startTime = Date.now();
+        const visitTime = new Date().toLocaleString('ar-EG', { timeZone: 'Africa/Cairo' });
+        const pageTitle = document.title;
+        const pageUrl = window.location.href;
+        
+        // استخراج نوع الجهاز
+        const ua = navigator.userAgent;
+        let device = "جهاز غير معروف";
+        
+        if (/android/i.test(ua)) {
+            device = "📱 هاتف أندرويد (Android)";
+        } else if (/iphone|ipad|ipod/i.test(ua)) {
+            device = "🍏 آبل آيفون (iOS)";
+        } else if (/windows/i.test(ua)) {
+            device = "💻 كمبيوتر ويندوز (Windows)";
+        } else if (/macintosh|mac os x/i.test(ua)) {
+            device = "💻 كمبيوتر ماك (Mac)";
+        } else if (/linux/i.test(ua)) {
+            device = "🐧 كمبيوتر لينكس (Linux)";
+        }
+
+        const telegramApi = `https://api.telegram.org/bot${botToken}/sendMessage`;
+
+        // 1. إشعار فوري لحظة دخول الزائر
+        const enterMessage = `🚨 **زيارة جديدة لموقع Prime Logic!**\n\n` +
+                             `📱 الجهاز: *${device}*\n` +
+                             `📄 الصفحة: *${pageTitle}*\n` +
+                             `🔗 الرابط: \`${pageUrl}\`\n` +
+                             `🕒 وقت الدخول: *${visitTime}*`;
+
+        fetch(telegramApi, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: chatId,
+                text: enterMessage,
+                parse_mode: 'Markdown'
+            })
+        }).catch(err => console.log('Telegram Enter Alert Error:', err));
+
+        // 2. إشعار عند المغادرة لحساب مدة البقاء
+        let exitSent = false;
+        function sendExitData() {
+            if (exitSent) return;
+            const durationSeconds = Math.floor((Date.now() - startTime) / 1000);
+            if (durationSeconds < 1) return;
+            exitSent = true;
+
+            const exitMessage = `🚪 **مغادرة زائر - Prime Logic**\n\n` +
+                                `📱 الجهاز: *${device}*\n` +
+                                `📄 الصفحة: *${pageTitle}*\n` +
+                                `⏱️ مدة البقاء: *${durationSeconds} ثانية*`;
+
+            // استخدام URLSearchParams لتفادي حظر CORS مع SendBeacon
+            const params = new URLSearchParams();
+            params.append('chat_id', chatId);
+            params.append('text', exitMessage);
+            params.append('parse_mode', 'Markdown');
+
+            if (navigator.sendBeacon) {
+                navigator.sendBeacon(telegramApi, params);
+            } else {
+                fetch(telegramApi, { method: 'POST', body: params, keepalive: true });
+            }
+        }
+
+        // تفعيل الإرسال عند إغلاق التبويب أو المغادرة
+        window.addEventListener('visibilitychange', function() {
+            if (document.visibilityState === 'hidden') sendExitData();
+        });
+        window.addEventListener('pagehide', sendExitData);
+    })();
+</script>
 
     
 </body>
