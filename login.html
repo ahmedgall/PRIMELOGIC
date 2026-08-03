@@ -1,129 +1,381 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prime Logic | نظام النخبة</title>
+    <title>Prime Logic | Institutional AI Order Flow Intelligence</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Orbitron:wght@400;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primeBg: '#05070D',
+                        primeCard: 'rgba(255, 255, 255, 0.04)',
+                        primeBorder: 'rgba(255, 255, 255, 0.08)',
+                        primeBlue: '#0A84FF',
+                        primeBlueSec: '#3B82F6',
+                        primeSuccess: '#22C55E',
+                        primeDanger: '#EF4444',
+                        primeText: '#FFFFFF',
+                        primeMuted: '#94A3B8'
+                    },
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif'],
+                        inter: ['Inter', 'sans-serif'],
+                        orbitron: ['Orbitron', 'sans-serif']
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-glow': 'pulseGlow 4s ease-in-out infinite',
+                        'blob': 'blob 10s infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-8px)' },
+                        },
+                        pulseGlow: {
+                            '0%, 100%': { opacity: 0.4, transform: 'scale(1)' },
+                            '50%': { opacity: 0.8, transform: 'scale(1.05)' },
+                        },
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        :root { --main-blue: #007bff; --dark-bg: #030303; }
         body { 
-            font-family: 'Cairo', sans-serif; 
-            background-color: var(--dark-bg);
-            background-image: radial-gradient(circle at top right, #0b1a36 0%, #030303 50%);
-            color: #ffffff; min-height: 100vh; 
-            display: flex; align-items: center; justify-content: center; margin: 0; overflow-x: hidden;
+            font-family: 'Inter', 'Cairo', sans-serif; 
+            background-color: #05070D;
+            color: #FFFFFF; 
+            min-height: 100vh; 
+            margin: 0; 
+            overflow-x: hidden;
         }
-        .prime-card { 
-            background: rgba(10, 10, 10, 0.6); backdrop-filter: blur(30px); 
-            border: 1px solid rgba(0, 123, 255, 0.2); border-radius: 2.5rem; 
-            width: 100%; max-width: 450px; padding: 2.5rem; 
-            box-shadow: 0 0 80px rgba(0, 0, 0, 1), 0 0 30px rgba(0, 123, 255, 0.1);
-        }
-        .tab-btn { transition: 0.3s; border-bottom: 2px solid transparent; opacity: 0.5; }
-        .tab-btn.active { opacity: 1; border-color: var(--main-blue); color: var(--main-blue); }
-        .input-prime { 
-            background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(0, 123, 255, 0.1); 
-            padding: 1.1rem; border-radius: 1.2rem; width: 100%; text-align: center; color: white; transition: 0.4s;
-        }
-        .input-prime:focus { border-color: var(--main-blue); outline: none; background: rgba(0, 123, 255, 0.05); }
-        
-        /* تنسيق قائمة اختيار الدولة */
-        .select-prime {
-            background: rgba(20, 20, 25, 0.95); border: 1px solid rgba(0, 123, 255, 0.1); 
-            color: white; padding: 0 1rem; border-radius: 1.2rem; outline: none;
-            cursor: pointer; font-weight: bold; font-size: 0.9rem; text-align: center;
-        }
-        .select-prime option { background: #0a0a0f; color: white; }
 
-        .btn-prime { 
-            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-            color: white; font-weight: 700; padding: 1.1rem; border-radius: 1.2rem; 
-            width: 100%; transition: 0.3s; border: none; cursor: pointer;
+        /* Layered Animated Background */
+        .bg-mesh {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -1;
+            background: #05070D;
+            overflow: pointer;
+            pointer-events: none;
         }
-        .btn-prime:disabled { opacity: 0.5; cursor: not-allowed; }
+        .bg-mesh::before {
+            content: "";
+            position: absolute;
+            top: -20%; left: -20%; width: 70vw; height: 70vh;
+            background: radial-gradient(circle, rgba(10,132,255,0.15) 0%, rgba(5,7,13,0) 70%);
+            border-radius: 50%;
+            animation: blob 15s infinite alternate;
+        }
+        .bg-mesh::after {
+            content: "";
+            position: absolute;
+            bottom: -20%; right: -20%; width: 70vw; height: 70vh;
+            background: radial-gradient(circle, rgba(59,130,246,0.1) 0%, rgba(5,7,13,0) 70%);
+            border-radius: 50%;
+            animation: blob 20s infinite alternate-reverse;
+        }
+
+        .prime-glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .prime-card-container {
+            background: rgba(12, 16, 28, 0.7);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border: 1px solid rgba(10, 132, 255, 0.2);
+            border-radius: 28px;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(10, 132, 255, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        }
+
+        .tab-btn {
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            color: #94A3B8;
+        }
+        .tab-btn.active {
+            color: #FFFFFF;
+            background: rgba(10, 132, 255, 0.12);
+            border-color: rgba(10, 132, 255, 0.4);
+            box-shadow: 0 0 20px rgba(10, 132, 255, 0.2);
+        }
+
+        .input-prime {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 0.95rem 1.1rem;
+            border-radius: 16px;
+            width: 100%;
+            color: white;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+        .input-prime:focus {
+            border-color: #0A84FF;
+            outline: none;
+            background: rgba(10, 132, 255, 0.04);
+            box-shadow: 0 0 20px rgba(10, 132, 255, 0.25);
+        }
+        .input-prime::placeholder {
+            color: #64748B;
+        }
+
+        .select-prime {
+            background: rgba(15, 20, 32, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: white;
+            padding: 0 0.8rem;
+            border-radius: 16px;
+            outline: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        .select-prime:hover {
+            border-color: rgba(10, 132, 255, 0.4);
+        }
+        .select-prime option {
+            background: #090D16;
+            color: white;
+        }
+
+        .btn-prime {
+            background: linear-gradient(135deg, #0A84FF 0%, #0056B3 100%);
+            color: white;
+            font-weight: 600;
+            padding: 1rem;
+            border-radius: 16px;
+            width: 100%;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(10, 132, 255, 0.3);
+        }
+        .btn-prime:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(10, 132, 255, 0.45);
+            filter: brightness(1.1);
+        }
+        .btn-prime:active {
+            transform: translateY(0px);
+        }
+        .btn-prime:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
         
         #toast {
-            position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px);
-            background: rgba(20, 20, 30, 0.9); border: 1px solid var(--main-blue);
-            padding: 1rem 2rem; border-radius: 1rem; z-index: 9999; transition: 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            display: flex; align-items: center; gap: 10px; pointer-events: none; opacity: 0;
+            position: fixed;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            background: rgba(10, 15, 25, 0.9);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(10, 132, 255, 0.4);
+            padding: 0.85rem 1.75rem;
+            border-radius: 14px;
+            z-index: 9999;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            pointer-events: none;
+            opacity: 0;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6), 0 0 20px rgba(10,132,255,0.2);
         }
-        #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-        .hidden { display: none; }
+        #toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+        .hidden { display: none !important; }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #05070D; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(10,132,255,0.4); }
     </style>
 </head>
-<body>
+<body class="flex flex-col items-center justify-between p-4 sm:p-6 lg:p-8">
 
+    <!-- Background Layers -->
+    <div class="bg-mesh"></div>
+
+    <!-- Toast Notification -->
     <div id="toast">
-        <span id="toastMsg" class="text-sm font-bold"></span>
+        <div class="w-2 h-2 rounded-full bg-[#0A84FF] animate-ping"></div>
+        <span id="toastMsg" class="text-sm font-semibold tracking-wide text-white"></span>
     </div>
 
-    <div class="prime-card">
-        <div class="text-center mb-8">
-            <h1 class="font-['Orbitron'] text-4xl font-black italic uppercase">Prime<span class="text-blue-600">Logic</span></h1>
-        </div>
-
-        <div id="tabsHeader" class="flex justify-around mb-8 border-b border-white/5">
-            <button onclick="switchTab('login')" id="loginTab" class="tab-btn active pb-3 px-6 font-bold">دخول</button>
-            <button onclick="switchTab('register')" id="regTab" class="tab-btn pb-3 px-6 font-bold">حساب جديد</button>
-        </div>
-
-        <div id="inputSection" class="space-y-5">
-            <div id="loginFields" class="space-y-5">
-                <div class="flex gap-2" dir="ltr">
-                    <select id="loginCountry" class="select-prime">
-                        <option value="20">🇪🇬 +20</option>
-                        <option value="964">🇮🇶 +964</option>
-                        <option value="966">🇸🇦 +966</option>
-                        <option value="971">🇦🇪 +971</option>
-                        <option value="965">🇰🇼 +965</option>
-                        <option value="974">🇶🇦 +974</option>
-                        <option value="968">🇴🇲 +968</option>
-                        <option value="962">🇯🇴 +962</option>
-                        <option value="973">🇧🇭 +973</option>
-                        <option value="212">🇲🇦 +212</option>
-                    </select>
-                    <input type="tel" id="loginPhone" class="input-prime flex-1" placeholder="رقم الهاتف بدون أصفار في الأول" dir="ltr">
-                </div>
-                <button onclick="handleLogin()" id="loginBtn" class="btn-prime shadow-lg shadow-blue-900/20">طلب كود الدخول</button>
+    <!-- Main Wrapper -->
+    <main class="w-full max-w-xl mx-auto flex flex-col items-center my-auto py-8">
+        
+        <!-- Hero Section -->
+        <div class="text-center mb-8 space-y-3 px-4 animate-fade-in">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full prime-glass border border-[#0A84FF]/30 text-[#0A84FF] text-xs font-semibold tracking-wider uppercase mb-1 shadow-[0_0_15px_rgba(10,132,255,0.15)]">
+                <span class="w-1.5 h-1.5 rounded-full bg-[#0A84FF] animate-pulse"></span>
+                AI Powered Gold Trading
             </div>
+            
+            <h2 class="font-orbitron text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white uppercase">
+                Prime <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#0A84FF] to-[#3B82F6]">Logic</span>
+            </h2>
+            
+            <p class="text-slate-300 text-sm sm:text-base font-medium max-w-md mx-auto leading-relaxed">
+                Institutional AI Order Flow Intelligence for Gold <span class="text-[#0A84FF] font-semibold">(XAU/USD)</span>
+            </p>
+            
+            <p class="text-slate-400 text-xs sm:text-sm max-w-sm mx-auto">
+                Advanced institutional liquidity analysis powered by artificial intelligence.
+            </p>
 
-            <div id="registerFields" class="hidden space-y-5">
-                <input type="text" id="regName" class="input-prime" placeholder="الاسم الكامل">
-                <div class="flex gap-2" dir="ltr">
-                    <select id="regCountry" class="select-prime">
-                        <option value="20">🇪🇬 +20</option>
-                        <option value="964">🇮🇶 +964</option>
-                        <option value="966">🇸🇦 +966</option>
-                        <option value="971">🇦🇪 +971</option>
-                        <option value="965">🇰🇼 +965</option>
-                        <option value="974">🇶🇦 +974</option>
-                        <option value="968">🇴🇲 +968</option>
-                        <option value="962">🇯🇴 +962</option>
-                        <option value="973">🇧🇭 +973</option>
-                        <option value="212">🇲🇦 +212</option>
-                    </select>
-                    <input type="tel" id="regPhone" class="input-prime flex-1" placeholder="رقم الواتساب بدون أصفار في الأول" dir="ltr">
-                </div>
-                <input type="text" id="regPromo" class="input-prime border-dashed border-blue-500/30" placeholder="كود الإحالة / رقم التليفون الداعي (اختياري)" dir="ltr">
-                <button onclick="sendBtnClick()" id="sendBtn" class="btn-prime shadow-lg shadow-blue-900/20">إرسال كود التفعيل</button>
+            <!-- Feature Pills -->
+            <div class="flex flex-wrap items-center justify-center gap-2 pt-2">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-white/[0.03] border border-white/[0.08] text-slate-300">
+                    <span class="text-[#22C55E]">✔</span> Live Signals
+                </span>
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-white/[0.03] border border-white/[0.08] text-slate-300">
+                    <span class="text-[#0A84FF]">✔</span> Smart Money
+                </span>
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-white/[0.03] border border-white/[0.08] text-slate-300">
+                    <span class="text-[#0A84FF]">✔</span> Order Flow
+                </span>
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-white/[0.03] border border-white/[0.08] text-slate-300">
+                    <span class="text-[#3B82F6]">✔</span> AI Analysis
+                </span>
             </div>
         </div>
 
-        <div id="otpSection" class="hidden space-y-5 text-center">
-            <p class="text-blue-400 text-sm mb-2">أدخل الكود المرسل للواتساب</p>
-            <input type="text" id="otpInput" class="input-prime text-2xl tracking-[8px]" placeholder="000000" maxlength="6">
-            <button id="verifyBtn" class="btn-prime">تأكيد الكود</button>
-            <button onclick="resetFlow()" class="text-xs text-white/30 underline mt-4">تغيير الرقم</button>
+        <!-- Login Card -->
+        <div class="prime-card-container w-full p-6 sm:p-8 relative animate-float">
+            
+            <!-- Logo Container -->
+            <div class="flex flex-col items-center justify-center mb-6 relative">
+                <div class="absolute w-20 h-20 bg-[#0A84FF]/20 rounded-full blur-xl pointer-events-none animate-pulse-glow"></div>
+                <img src="icona.png" alt="Prime Logic Logo" class="w-20 h-20 object-contain relative z-10 drop-shadow-[0_0_20px_rgba(10,132,255,0.4)]">
+            </div>
+
+            <!-- Modern Segmented Tabs -->
+            <div id="tabsHeader" class="flex p-1 bg-black/40 rounded-2xl border border-white/[0.06] mb-8 gap-1">
+                <button onclick="switchTab('login')" id="loginTab" class="tab-btn active flex-1 py-2.5 text-sm font-semibold rounded-xl border border-transparent text-center transition-all">دخول</button>
+                <button onclick="switchTab('register')" id="regTab" class="tab-btn flex-1 py-2.5 text-sm font-semibold rounded-xl border border-transparent text-center transition-all">حساب جديد</button>
+            </div>
+
+            <!-- Input & Form Section -->
+            <div id="inputSection" class="space-y-5">
+                
+                <!-- Login Fields -->
+                <div id="loginFields" class="space-y-4">
+                    <div class="flex gap-2" dir="ltr">
+                        <select id="loginCountry" class="select-prime">
+                            <option value="20">🇪🇬 +20</option>
+                            <option value="964">🇮🇶 +964</option>
+                            <option value="966">🇸🇦 +966</option>
+                            <option value="971">🇦🇪 +971</option>
+                            <option value="965">🇰🇼 +965</option>
+                            <option value="974">🇶🇦 +974</option>
+                            <option value="968">🇴🇲 +968</option>
+                            <option value="962">🇯🇴 +962</option>
+                            <option value="973">🇧🇭 +973</option>
+                            <option value="212">🇲🇦 +212</option>
+                        </select>
+                        <input type="tel" id="loginPhone" class="input-prime flex-1 text-left font-mono" placeholder="رقم الهاتف بدون أصفار في الأول">
+                    </div>
+                    <button onclick="handleLogin()" id="loginBtn" class="btn-prime mt-2">طلب كود الدخول</button>
+                </div>
+
+                <!-- Register Fields -->
+                <div id="registerFields" class="hidden space-y-4">
+                    <div>
+                        <input type="text" id="regName" class="input-prime text-right" placeholder="الاسم الكامل">
+                    </div>
+                    <div class="flex gap-2" dir="ltr">
+                        <select id="regCountry" class="select-prime">
+                            <option value="20">🇪🇬 +20</option>
+                            <option value="964">🇮🇶 +964</option>
+                            <option value="966">🇸🇦 +966</option>
+                            <option value="971">🇦🇪 +971</option>
+                            <option value="965">🇰🇼 +965</option>
+                            <option value="974">🇶🇦 +974</option>
+                            <option value="968">🇴🇲 +968</option>
+                            <option value="962">🇯🇴 +962</option>
+                            <option value="973">🇧🇭 +973</option>
+                            <option value="212">🇲🇦 +212</option>
+                        </select>
+                        <input type="tel" id="regPhone" class="input-prime flex-1 text-left font-mono" placeholder="رقم الواتساب بدون أصفار في الأول">
+                    </div>
+                    <div>
+                        <input type="text" id="regPromo" class="input-prime border-dashed border-[#0A84FF]/40 text-left" placeholder="كود الإحالة / رقم التليفون الداعي (اختياري)" dir="ltr">
+                    </div>
+                    <button onclick="sendBtnClick()" id="sendBtn" class="btn-prime mt-2">إرسال كود التفعيل</button>
+                </div>
+            </div>
+
+            <!-- OTP Section -->
+            <div id="otpSection" class="hidden space-y-6 text-center py-2">
+                <div class="space-y-1">
+                    <p class="text-slate-200 font-medium text-sm">أدخل كود التحقق المكون من 6 أرقام</p>
+                    <p class="text-[#0A84FF] text-xs">تم إرسال الكود بنجاح إلى تطبيق الواتساب الخاص بك</p>
+                </div>
+                
+                <div class="flex justify-center">
+                    <input type="text" id="otpInput" class="input-prime text-center text-3xl font-mono tracking-[12px] py-4 max-w-[280px]" placeholder="000000" maxlength="6" dir="ltr">
+                </div>
+
+                <div class="space-y-3 pt-2">
+                    <button id="verifyBtn" class="btn-prime">تأكيد الكود</button>
+                    <button onclick="resetFlow()" class="text-xs text-slate-400 hover:text-white transition-colors underline block mx-auto py-1">تغيير الرقم أو العودة</button>
+                </div>
+            </div>
+
         </div>
 
-        <div class="mt-10 text-center opacity-10">
-            <p class="text-[7px] tracking-[5px] uppercase">Powered by Fixaa Arab Software</p>
+        <!-- Trust Statistics Section -->
+        <div class="w-full grid grid-cols-3 gap-3 mt-8">
+            <div class="prime-glass rounded-2xl p-4 text-center border border-white/[0.06]">
+                <div class="font-orbitron font-black text-lg sm:text-xl text-white">2560+</div>
+                <div class="text-[11px] sm:text-xs text-slate-400 mt-0.5 font-medium">Active Traders</div>
+            </div>
+            <div class="prime-glass rounded-2xl p-4 text-center border border-white/[0.06]">
+                <div class="font-orbitron font-black text-lg sm:text-xl text-[#22C55E]">99.2%</div>
+                <div class="text-[11px] sm:text-xs text-slate-400 mt-0.5 font-medium">Signal Accuracy</div>
+            </div>
+            <div class="prime-glass rounded-2xl p-4 text-center border border-white/[0.06]">
+                <div class="font-orbitron font-black text-lg sm:text-xl text-[#0A84FF]">24/7</div>
+                <div class="text-[11px] sm:text-xs text-slate-400 mt-0.5 font-medium">Live Feed</div>
+            </div>
         </div>
-    </div>
 
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full text-center py-6 mt-4 border-t border-white/[0.04]">
+        <div class="space-y-1">
+            <p class="text-xs tracking-widest text-slate-400 font-semibold uppercase">&copy; Prime Logic</p>
+            <p class="text-[10px] text-slate-500 tracking-wider uppercase font-medium">Institutional Trading Intelligence</p>
+        </div>
+    </footer>
+
+    <!-- Scripts (Untouched Logic & Firebase) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, doc, getDoc, setDoc, serverTimestamp, Timestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
@@ -154,7 +406,7 @@
             const toast = document.getElementById('toast');
             document.getElementById('toastMsg').innerText = msg;
             toast.className = 'show'; 
-            toast.style.borderColor = (type === 'error') ? '#ef4444' : '#007bff';
+            toast.style.borderColor = (type === 'error') ? '#ef4444' : '#0a84ff';
             setTimeout(() => toast.className = '', 3000);
         };
 
@@ -344,39 +596,36 @@
         };
     </script>
 
-<script>
-    (function() {
-        const botToken = "8744408614:AAEXaf_INnHaJ1-hkvKavrBvhIaYFSzf-q0";
-        const chatId = "6387342853";
-        
-        // جلب معلومات بسيطة عن الزائر
-        const visitTime = new Date().toLocaleString('ar-EG', { timeZone: 'Africa/Cairo' });
-        const pageTitle = document.title;
-        const pageUrl = window.location.href;
-        
-        const message = `🚨 **زيارة جديدة لموقع Prime Logic!**\n\n` +
-                        `📄 الصفحة: *${pageTitle}*\n` +
-                        `🔗 الرابط: \`${pageUrl}\`\n` +
-                        `🕒 الوقت: *${visitTime}*`;
-        
-        const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
-        
-        // إرسال الإشعار في الخلفية بدون ما نحسس الزائر بأي بطء
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                chat_id: chatId,
-                text: message,
-                parse_mode: 'Markdown'
-            })
-        }).catch(err => console.log('Telegram Alert Error:', err));
-    })();
-</script>
-
-
-    
+    <!-- Telegram Notification Script -->
+    <script>
+        (function() {
+            const botToken = "8744408614:AAEXaf_INnHaJ1-hkvKavrBvhIaYFSzf-q0";
+            const chatId = "6387342853";
+            
+            const visitTime = new Date().toLocaleString('ar-EG', { timeZone: 'Africa/Cairo' });
+            const pageTitle = document.title;
+            const pageUrl = window.location.href;
+            
+            const message = `🚨 **زيارة جديدة لموقع Prime Logic!**\n\n` +
+                            `📄 الصفحة: *${pageTitle}*\n` +
+                            `🔗 الرابط: \`${pageUrl}\`\n` +
+                            `🕒 الوقت: *${visitTime}*`;
+            
+            const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+            
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    chat_id: chatId,
+                    text: message,
+                    parse_mode: 'Markdown'
+                })
+            }).catch(err => console.log('Telegram Alert Error:', err));
+        })();
+    </script>
 </body>
 </html>
+
