@@ -107,11 +107,9 @@
         #overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 999; display: none; backdrop-filter: blur(4px); }
         #overlay.active { display: block; }
         
-        /* كارت الحجب عند انتهاء الاشتراك */
         .lock-overlay { display: none; position: absolute; inset: 0; background: rgba(7, 9, 13, 0.95); backdrop-filter: blur(16px); z-index: 50; flex-direction: column; align-items: center; justify-content: center; text-align: center; border-radius: 22px; }
         .lock-overlay.active { display: flex; }
 
-        /* Custom scrollbar */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #07090d; }
         ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
@@ -243,18 +241,17 @@
             <div class="text-center sm:text-right w-full z-10">
                 <div class="flex items-center gap-2 justify-center sm:justify-start mb-2">
                     <span class="px-2.5 py-0.5 rounded-md bg-[#00C2FF]/10 border border-[#00C2FF]/20 text-[#00C2FF] text-[10px] font-bold font-['Orbitron']">XAU/USD</span>
-                    <span class="text-xs text-gray-400">Prime OrderBook Analyzer</span>
+                    <span class="text-xs text-gray-400">Prime Technical Analyzer</span>
                 </div>
-                <h2 id="signalText" class="text-xl sm:text-2xl font-black italic text-white leading-tight">جاري تحليل أحجام الشراء والبيع في البورصة الحية...</h2>
+                <h2 id="signalText" class="text-xl sm:text-2xl font-black italic text-white leading-tight">جاري تحليل مؤشرات السوق الفنية...</h2>
             </div>
             <div class="bg-white/[0.03] border border-white/10 px-5 py-3.5 rounded-2xl min-w-[120px] text-center z-10 shadow-inner">
-                <p class="text-[10px] text-gray-400 font-bold mb-1 uppercase tracking-wider">قوة الاتجاه</p>
+                <p class="text-[10px] text-gray-400 font-bold mb-1 uppercase tracking-wider">نسبة الثقة</p>
                 <p id="accuracyValue" class="text-2xl font-black text-[#00E5A8] font-[Orbitron]">--%</p>
             </div>
         </div>
 
         <div class="chart-container glass p-3 shadow-2xl relative bg-[#10151d]">
-            <!-- TradingView Toolbar Header -->
             <div class="flex items-center justify-between px-4 py-2 mb-2 border-b border-white/5">
                 <div class="flex items-center gap-3">
                     <span class="w-2.5 h-2.5 rounded-full bg-[#00E5A8]"></span>
@@ -378,8 +375,94 @@
                 </div>`).join('');
         }
 
-        // --- نظام حساب الصفقات اللحظي وحساب غلبة السيولة المضمون 100% من عمق سوق بينانس ---
-        async function fetchRealSignal() {
+        function calculateEMA(data, period) {
+            const k = 2 / (period + 1);
+            let emaArray = [];
+            let sum = 0;
+            for (let i = 0; i < period; i++) {
+                sum += data[i];
+            }
+            let prevEMA = sum / period;
+            emaArray.push(prevEMA);
+            for (let i = period; i < data.length; i++) {
+                prevEMA = (data[i] * k) + (prevEMA * (1 - k));
+                emaArray.push(prevEMA);
+            }
+            return emaArray;
+        }
+
+        function calculateRSI(closes, period = 14) {
+            let gains = 0;
+            let losses = 0;
+            for (let i = 1; i <= period; i++) {
+                let change = closes[i] - closes[i - 1];
+                if (change > 0) gains += change;
+                else losses -= change;
+            }
+            let avgGain = gains / period;
+            let avgLoss = losses / period;
+            
+            for (let i = period + 1; i < closes.length; i++) {
+                let change = closes[i] - closes[i - 1];
+                if (change > 0) {
+                    avgGain = (avgGain * (period - 1) + change) / period;
+                    avgLoss = (avgLoss * (period - 1)) / period;
+                } else {
+                    avgGain = (avgGain * (period - 1)) / period;
+                    avgLoss = (avgLoss * (period - 1) - change) / period;
+                }
+            }
+            if (avgLoss === 0) return 100;
+            let rs = avgGain / avgLoss;
+            return 100 - (100 / (1 + rs));
+        }
+
+        function calculateMACD(closes) {
+            const ema12 = calculateEMA(closes, 12);
+            const ema26 = calculateEMA(closes, 26);
+            let macdLine = [];
+            let diff = 26 - 12;
+            for (let i = 0; i < ema26.length; i++) {
+                macdLine.push(ema12[i + diff] - ema26[i]);
+            }
+            const signalLine = calculateEMA(macdLine, 9);
+            return {
+                macd: macdLine[macdLine.length - 1],
+                signal: signalLine[signalLine.length - 1]
+            };
+        }
+
+        function calculateATR(highs, lows, closes, period = 14) {
+            let trs = [];
+            for (let i = 1; i < closes.length; i++) {
+                let hl = highs[i] - lows[i];
+                let hc = Math.abs(highs[i] - closes[i - 1]);
+                let lc = Math.abs(lows[i] - closes[i - 1]);
+                trs.push(Math.max(hl, hc, lc));
+            }
+            let atrs = [];
+            let sum = 0;
+            for (let i = 0; i < period; i++) {
+                sum += trs[i];
+            }
+            let prevATR = sum / period;
+            atrs.push(prevATR);
+            for (let i = period; i < trs.length; i++) {
+                prevATR = ((prevATR * (period - 1)) + trs[i]) / period;
+                atrs.push(prevATR);
+            }
+            let atrSum20 = 0;
+            let count20 = Math.min(20, atrs.length);
+            for (let i = atrs.length - count20; i < atrs.length; i++) {
+                atrSum20 += atrs[i];
+            }
+            return {
+                currentATR: atrs[atrs.length - 1],
+                avgATR20: atrSum20 / count20
+            };
+        }
+
+        async function generateSignal() {
             if (isExpired) return;
 
             const textEl = document.getElementById('signalText');
@@ -387,76 +470,84 @@
             const accuracyEl = document.getElementById('accuracyValue');
             
             try {
-                // سحب عمق السوق (Order Book) لآخر 100 عملية معلقة حالياً في البورصة
-                const response = await fetch('https://api.binance.com/api/v3/depth?symbol=PAXGUSDT&limit=100');
-                if(!response.ok) throw new Error("Binance OrderBook API Error");
+                const response = await fetch('https://api.binance.com/api/v3/klines?symbol=PAXGUSDT&interval=5m&limit=200');
+                if(!response.ok) throw new Error("Binance API Error");
                 
-                const depthData = await response.json();
-                
-                // حساب إجمالي كميات الشراء المعروضة (Bids)
-                let totalBuyVolume = 0;
-                depthData.bids.forEach(bid => {
-                    totalBuyVolume += parseFloat(bid[1]); // bid[1] هو الكمية المتاحة للشراء
-                });
+                const klines = await response.json();
+                const closes = klines.map(k => parseFloat(k[4]));
+                const highs = klines.map(k => parseFloat(k[2]));
+                const lows = klines.map(k => parseFloat(k[3]));
 
-                // حساب إجمالي كميات البيع المعروضة (Asks)
-                let totalSellVolume = 0;
-                depthData.asks.forEach(ask => {
-                    totalSellVolume += parseFloat(ask[1]); // ask[1] هو الكمية المتاحة للبيع
-                });
+                const ema20Arr = calculateEMA(closes, 20);
+                const ema50Arr = calculateEMA(closes, 50);
+                const currentEMA20 = ema20Arr[ema20Arr.length - 1];
+                const currentEMA50 = ema50Arr[ema50Arr.length - 1];
 
-                // سحب السعر الحالي للذهب لتضمينه في الإشارة المكتوبة
-                const priceResponse = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=PAXGUSDT');
-                const priceData = await priceResponse.json();
-                const currentPrice = parseFloat(priceData.price);
+                const currentRSI = calculateRSI(closes, 14);
+                const macdObj = calculateMACD(closes);
+                const atrObj = calculateATR(highs, lows, closes, 14);
+                const lastClose = closes[closes.length - 1];
 
-                // حساب النسبة المئوية لقوة المشترين في السوق
-                const combinedVolume = totalBuyVolume + totalSellVolume;
-                if(combinedVolume === 0) return; // تفادي القسمة على صفر في حالة الهنج
+                let score = 0;
+                if (currentEMA20 > currentEMA50) score += 1;
+                if (currentRSI >= 50 && currentRSI <= 70) score += 1;
+                if (macdObj.macd > macdObj.signal) score += 1;
+                if (lastClose > currentEMA20) score += 1;
+                if (atrObj.currentATR > atrObj.avgATR20) score += 1;
 
-                const buyPercentage = (totalBuyVolume / combinedVolume) * 100;
-                const sellPercentage = (totalSellVolume / combinedVolume) * 100;
+                const confidenceMap = {
+                    5: "92%",
+                    4: "80%",
+                    3: "60%",
+                    2: "40%",
+                    1: "25%",
+                    0: "25%"
+                };
 
-                let decision;
-                let finalStrength;
+                let decisionText = "";
+                let color = "";
 
-                // بناء التوصية الأكثر ضماناً بناءً على قراءة السيولة الحقيقية المتدفقة فوراً
-                if (buyPercentage >= 58) {
-                    finalStrength = Math.round(buyPercentage);
-                    decision = {t: `إشارة شراء قوية الآن 📈 (${currentPrice.toFixed(2)})`, c: "#00E5A8"};
-                } else if (buyPercentage > 51 && buyPercentage < 58) {
-                    finalStrength = Math.round(buyPercentage);
-                    decision = {t: `فرصة شراء فرعية قائمة 🌤️ (${currentPrice.toFixed(2)})`, c: "#00C2FF"};
-                } else if (sellPercentage >= 58) {
-                    finalStrength = Math.round(sellPercentage);
-                    decision = {t: `إشارة بيع فورية الآن 📉 (${currentPrice.toFixed(2)})`, c: "#ff4d5a"};
-                } else if (sellPercentage > 51 && sellPercentage < 58) {
-                    finalStrength = Math.round(sellPercentage);
-                    decision = {t: `فرصة بيع فرعية قائمة 🌧️ (${currentPrice.toFixed(2)})`, c: "#ffb300"};
+                if (score === 5) {
+                    decisionText = "Strong Buy";
+                    color = "#22c55e";
+                } else if (score === 4) {
+                    decisionText = "Buy";
+                    color = "#3B82F6";
+                } else if (score === 3) {
+                    decisionText = "Neutral";
+                    color = "#eab308";
+                } else if (score === 2) {
+                    decisionText = "Sell";
+                    color = "#f97316";
                 } else {
-                    // إذا كان السوق متقارب جداً 50% مقابل 50%
-                    finalStrength = Math.round(Math.max(buyPercentage, sellPercentage));
-                    decision = {t: `السوق عرضي.. ترقب نقطة الدخول ⏳ (${currentPrice.toFixed(2)})`, c: "#ffb300"};
+                    decisionText = "Strong Sell";
+                    color = "#ef4444";
                 }
 
-                // عرض نسبة قوة الاتجاه الحقيقية ومطابقتها للتوصية والألوان
-                accuracyEl.innerText = `${finalStrength}%`;
-                textEl.innerText = decision.t;
-                textEl.style.color = decision.c;
-                cardEl.style.borderColor = decision.c;
-                logSignal(decision);
+                if (score < 4) {
+                    textEl.innerText = "السوق غير واضح حالياً، انتظر فرصة أفضل.";
+                    textEl.style.color = color;
+                    cardEl.style.borderColor = color;
+                    accuracyEl.innerText = confidenceMap[score];
+                } else {
+                    textEl.innerText = `التوصية الحالية: ${decisionText}`;
+                    textEl.style.color = color;
+                    cardEl.style.borderColor = color;
+                    accuracyEl.innerText = confidenceMap[score];
+                    logSignal({t: decisionText, c: color});
+                }
 
             } catch (error) {
-                console.error("OrderBook Logic Error:", error);
-                textEl.innerText = "جاري فحص أحجام التداول ومزامنة الرادار...";
-                textEl.style.color = "#00C2FF";
+                console.error("Market Analysis Error:", error);
+                textEl.innerText = "تعذر الاتصال بالسوق حالياً.";
+                textEl.style.color = "#ef4444";
+                cardEl.style.borderColor = "#ef4444";
             }
         }
 
         function startSignalRadar() {
-            // تحديث دوري كل 12 ثانية لقراءة التغير في جدار الدعم والمقاومة للسيولة
-            setInterval(fetchRealSignal, 12000); 
-            fetchRealSignal();
+            setInterval(generateSignal, 15000); 
+            generateSignal();
         }
 
         document.getElementById('logoutBtn').onclick = () => { localStorage.clear(); window.location.href='login.html'; };
