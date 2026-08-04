@@ -5,18 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prime Logic | نظام إشارات تداول الذهب الاحترافي</title>
     <!-- استدعاء خط Cairo المتطور -->
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
     <!-- FontAwesome للأيقونات -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            --bg-deep: #000000;
-            --bg-card: #0f0f0f;
-            --text-main: #ffffff;
-            --text-muted: #b5b5b5;
-            --border-card: rgba(255, 255, 255, 0.08);
-            --border-card-hover: rgba(255, 255, 255, 0.2);
+            --bg-deep: #050505;
+            --bg-card: #101010;
+            --bg-secondary: #181818;
+            --text-main: #FFFFFF;
+            --text-muted: #B8B8B8;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(59, 130, 246, 0.4);
+            --accent: #3B82F6;
+            --accent-hover: #2563EB;
         }
 
         * {
@@ -31,22 +34,23 @@
             background-color: var(--bg-deep);
             color: var(--text-main);
             overflow-x: hidden;
-            line-height: 1.6;
+            line-height: 1.7;
             min-height: 100vh;
+            font-weight: 500;
         }
 
         /* شريط العرض العلوي المؤقت */
         .top-urgency-banner {
-            background: #0f0f0f;
-            color: #ffffff;
+            background: var(--bg-secondary);
+            color: var(--text-main);
             text-align: center;
             padding: 12px 15px;
-            font-size: 0.85rem;
+            font-size: 0.88rem;
             font-weight: 700;
             letter-spacing: -0.2px;
             position: relative;
             z-index: 1001;
-            border-bottom: 1px solid var(--border-card);
+            border-bottom: 1px solid var(--border-color);
         }
 
         /* الهيدر العصري بتصميم Glassmorphism فاخر */
@@ -54,14 +58,15 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 24px 8%;
-            border-bottom: 1px solid var(--border-card);
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            padding: 22px 8%;
+            border-bottom: 1px solid var(--border-color);
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             position: sticky;
             top: 0;
             z-index: 1000;
+            transition: background 0.3s ease;
         }
 
         .logo {
@@ -70,45 +75,48 @@
             color: var(--text-main);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             letter-spacing: -0.5px;
+            text-decoration: none;
         }
 
-        .logo i {
-            color: #ffffff;
-            font-size: 1.2rem;
+        .logo img {
+            height: 32px;
+            width: auto;
+            object-fit: contain;
         }
 
         .logo span {
             color: var(--text-muted);
+            font-weight: 500;
         }
 
         .header-login-btn {
             color: var(--text-main);
             text-decoration: none;
             font-weight: 600;
-            font-size: 0.88rem;
-            padding: 10px 20px;
-            border: 1px solid var(--border-card);
-            border-radius: 14px;
-            transition: all 0.2s ease;
-            background: rgba(255, 255, 255, 0.02);
+            font-size: 0.9rem;
+            padding: 10px 22px;
+            border: 1px solid var(--border-color);
+            border-radius: 9999px;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            background: rgba(255, 255, 255, 0.03);
         }
 
         .header-login-btn:hover {
-            background: #ffffff;
-            color: #000000;
-            border-color: #ffffff;
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+            color: var(--text-main);
         }
 
         /* القسم الرئيسي (Hero Section) */
         .hero-section {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1.1fr 0.9fr;
             align-items: center;
             gap: 60px;
-            padding: 80px 8% 60px;
-            max-width: 1300px;
+            padding: 90px 8% 70px;
+            max-width: 1350px;
             margin: 0 auto;
         }
 
@@ -120,29 +128,29 @@
         }
 
         .badge {
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text-main);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.82rem;
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--accent);
+            padding: 8px 18px;
+            border-radius: 9999px;
+            font-size: 0.85rem;
             font-weight: 700;
             margin-bottom: 24px;
-            border: 1px solid var(--border-card);
+            border: 1px solid rgba(59, 130, 246, 0.2);
             display: inline-flex;
             align-items: center;
             gap: 8px;
         }
 
         .badge i {
-            color: #ffffff;
+            color: var(--accent);
         }
 
         .hero-section h1 {
-            font-size: clamp(2.5rem, 4.5vw, 3.6rem);
+            font-size: clamp(2.6rem, 4.5vw, 3.8rem);
             font-weight: 900;
-            margin-bottom: 20px;
-            line-height: 1.15;
-            letter-spacing: -1px;
+            margin-bottom: 22px;
+            line-height: 1.12;
+            letter-spacing: -1.2px;
         }
 
         .hero-section h1 span {
@@ -151,19 +159,19 @@
 
         .hero-section p {
             color: var(--text-muted);
-            font-size: 1.1rem;
-            margin-bottom: 35px;
-            line-height: 1.7;
+            font-size: 1.12rem;
+            margin-bottom: 40px;
+            line-height: 1.75;
         }
 
-        /* حاوية زر الـ CTA الرئيسي والأزرار بنمط Apple */
+        /* حاوية زر الـ CTA الرئيسي والأزرار بنمط Stripe/Apple الفاخر */
         .cta-container {
             display: flex;
             flex-direction: column;
             align-items: flex-start;
             width: 100%;
-            max-width: 420px;
-            margin-bottom: 15px;
+            max-width: 440px;
+            margin-bottom: 20px;
         }
 
         .btn-primary-signup {
@@ -172,33 +180,34 @@
             align-items: center;
             gap: 12px;
             width: 100%;
-            background: #ffffff;
-            color: #000000;
+            background: var(--accent);
+            color: #FFFFFF;
             font-weight: 800;
-            font-size: 1.05rem;
-            padding: 16px 28px;
-            border-radius: 24px;
+            font-size: 1.08rem;
+            padding: 18px 32px;
+            border-radius: 9999px;
             text-decoration: none;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            transition: all 0.25s ease;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.25);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .btn-primary-signup:hover {
-            background: #eaeaea;
+            background: var(--accent-hover);
             transform: scale(1.02);
+            box-shadow: 0 15px 35px rgba(59, 130, 246, 0.4);
         }
 
         /* الثقة تحت الزر */
         .trust-badges-row {
             display: flex;
             justify-content: flex-start;
-            gap: 18px;
+            gap: 20px;
             flex-wrap: wrap;
             color: var(--text-muted);
-            font-size: 0.82rem;
+            font-size: 0.85rem;
             font-weight: 600;
-            margin-top: 15px;
+            margin-top: 16px;
         }
 
         .trust-badges-row span {
@@ -208,16 +217,16 @@
         }
 
         .trust-badges-row i {
-            color: #22c55e; /* Badge صغير أخضر كما سمح في التعليمات */
+            color: #22c55e;
         }
 
         /* Mockup مرئي فاخر بجانب العنوان */
         .hero-mockup-wrapper {
             background: var(--bg-card);
-            border: 1px solid var(--border-card);
+            border: 1px solid var(--border-color);
             border-radius: 24px;
-            padding: 30px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            padding: 32px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7);
             position: relative;
         }
 
@@ -225,9 +234,9 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid var(--border-card);
-            padding-bottom: 15px;
-            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 16px;
+            margin-bottom: 22px;
         }
 
         .mockup-symbol {
@@ -235,51 +244,52 @@
             align-items: center;
             gap: 10px;
             font-weight: 800;
-            font-size: 1rem;
+            font-size: 1.05rem;
         }
 
         .mockup-symbol span {
-            color: var(--text-muted);
+            color: var(--accent);
         }
 
         .live-dot {
-            width: 8px;
-            height: 8px;
+            width: 9px;
+            height: 9px;
             background-color: #22c55e;
             border-radius: 50%;
-            box-shadow: 0 0 8px rgba(34, 197, 94, 0.5);
+            box-shadow: 0 0 10px rgba(34, 197, 94, 0.6);
         }
 
         .mockup-signal-box {
-            background: #000000;
-            border: 1px solid var(--border-card);
+            background: var(--bg-deep);
+            border: 1px solid var(--border-color);
             border-radius: 16px;
-            padding: 18px;
-            margin-bottom: 15px;
+            padding: 20px;
+            margin-bottom: 16px;
         }
 
         .signal-header-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 0.88rem;
+            font-size: 0.9rem;
             font-weight: 700;
-            margin-bottom: 12px;
+            margin-bottom: 14px;
         }
 
         .badge-buy-sm {
             background: rgba(34, 197, 94, 0.15);
             color: #22c55e;
-            padding: 3px 10px;
+            padding: 4px 12px;
             border-radius: 6px;
-            font-size: 0.75rem;
+            font-size: 0.78rem;
+            font-weight: 700;
         }
 
         .signal-details-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            font-size: 0.82rem;
+            gap: 12px;
+            font-size: 0.85rem;
             color: var(--text-muted);
             text-align: center;
         }
@@ -287,118 +297,118 @@
         .signal-details-grid div strong {
             display: block;
             color: var(--text-main);
-            font-size: 0.92rem;
-            margin-top: 4px;
+            font-size: 0.95rem;
+            margin-top: 6px;
         }
 
         /* الهياكل العامة للأقسام مع مسافات أكبر ومظهر Minimal */
         .section-padding {
-            padding: 100px 8%;
-            max-width: 1200px;
+            padding: 110px 8%;
+            max-width: 1250px;
             margin: 0 auto;
         }
 
         .section-header {
             text-align: center;
-            margin-bottom: 60px;
+            margin-bottom: 65px;
         }
 
         .section-header h2 {
-            font-size: 2.4rem;
+            font-size: 2.5rem;
             font-weight: 900;
-            margin-bottom: 15px;
-            letter-spacing: -0.5px;
+            margin-bottom: 16px;
+            letter-spacing: -0.8px;
         }
 
         .section-header h2 span {
-            color: var(--text-muted);
+            color: var(--accent);
         }
 
         .section-header p {
             color: var(--text-muted);
-            font-size: 1.05rem;
+            font-size: 1.1rem;
         }
 
         /* زر متكرر بعد الأقسام */
         .section-cta-wrap {
             display: flex;
             justify-content: center;
-            margin-top: 50px;
+            margin-top: 55px;
         }
 
         .section-cta-wrap .btn-primary-signup {
             max-width: 320px;
-            font-size: 0.95rem;
-            padding: 14px 24px;
+            font-size: 1rem;
+            padding: 16px 28px;
         }
 
         /* 1. قسم ماذا ستحصل داخل المنصة (الكروت الفاخرة) */
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 32px;
         }
 
         .feature-card {
             background: var(--bg-card);
-            border: 1px solid var(--border-card);
+            border: 1px solid var(--border-color);
             border-radius: 24px;
-            padding: 35px;
-            transition: all 0.3s ease;
+            padding: 40px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
         }
 
         .feature-card:hover {
-            border-color: var(--border-card-hover);
+            border-color: var(--border-hover);
             transform: translateY(-4px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
         }
 
         .feature-icon {
-            width: 54px;
-            height: 54px;
-            background: #1a1a1a;
-            border-radius: 16px;
+            width: 58px;
+            height: 58px;
+            background: var(--bg-secondary);
+            border-radius: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.25rem;
-            color: #ffffff;
-            margin-bottom: 22px;
-            border: 1px solid var(--border-card);
+            font-size: 1.35rem;
+            color: var(--accent);
+            margin-bottom: 24px;
+            border: 1px solid var(--border-color);
         }
 
         .feature-card h3 {
-            font-size: 1.2rem;
+            font-size: 1.25rem;
             font-weight: 900;
             margin-bottom: 12px;
         }
 
         .feature-card p {
             color: var(--text-muted);
-            font-size: 0.95rem;
-            line-height: 1.7;
+            font-size: 0.98rem;
+            line-height: 1.75;
         }
 
         /* 2. كيف تعمل المنصة (3 خطوات) */
         .steps-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 32px;
         }
 
         .step-card {
             background: var(--bg-card);
-            border: 1px solid var(--border-card);
+            border: 1px solid var(--border-color);
             border-radius: 24px;
-            padding: 40px 30px;
+            padding: 45px 35px;
             position: relative;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .step-card:hover {
-            border-color: var(--border-card-hover);
+            border-color: var(--border-hover);
             transform: translateY(-4px);
         }
 
@@ -406,21 +416,21 @@
             position: absolute;
             top: 25px;
             left: 25px;
-            font-size: 1.8rem;
+            font-size: 2rem;
             font-weight: 900;
-            color: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.04);
         }
 
         .step-card h3 {
-            font-size: 1.2rem;
+            font-size: 1.25rem;
             font-weight: 900;
             margin-bottom: 12px;
         }
 
         .step-card p {
             color: var(--text-muted);
-            font-size: 0.95rem;
-            line-height: 1.7;
+            font-size: 0.98rem;
+            line-height: 1.75;
         }
 
         /* 3. الأسئلة الشائعة (FAQ) بنمط Stripe الفاخر */
@@ -434,16 +444,16 @@
 
         .faq-item {
             background: var(--bg-card);
-            border: 1px solid var(--border-card);
+            border: 1px solid var(--border-color);
             border-radius: 20px;
             overflow: hidden;
             transition: all 0.3s ease;
         }
 
         .faq-question {
-            padding: 22px 28px;
+            padding: 24px 30px;
             font-weight: 900;
-            font-size: 1.05rem;
+            font-size: 1.08rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -453,20 +463,20 @@
 
         .faq-question i {
             color: var(--text-muted);
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, color 0.3s ease;
         }
 
         .faq-answer {
-            padding: 0 28px 22px;
+            padding: 0 30px 24px;
             color: var(--text-muted);
-            font-size: 0.95rem;
-            line-height: 1.7;
+            font-size: 0.98rem;
+            line-height: 1.75;
             display: none;
         }
 
         .faq-item.active {
-            border-color: var(--border-card-hover);
-            background: #141414;
+            border-color: var(--border-hover);
+            background: var(--bg-secondary);
         }
 
         .faq-item.active .faq-answer {
@@ -475,52 +485,62 @@
 
         .faq-item.active .faq-question i {
             transform: rotate(180deg);
-            color: #ffffff;
+            color: var(--accent);
         }
 
         /* 4. الـ CTA النهائي الأضخم والأساس في الصفحة */
         .final-cta-section {
             text-align: center;
-            padding: 100px 20px;
-            background: #000000;
-            border-top: 1px solid var(--border-card);
+            padding: 110px 20px;
+            background: var(--bg-deep);
+            border-top: 1px solid var(--border-color);
         }
 
         .final-cta-box {
-            max-width: 800px;
+            max-width: 850px;
             margin: 0 auto;
             background: var(--bg-card);
-            border: 1px solid var(--border-card);
-            border-radius: 24px;
-            padding: 60px 40px;
+            border: 1px solid var(--border-hover);
+            border-radius: 28px;
+            padding: 65px 45px;
             box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
         }
 
         .final-cta-box h2 {
-            font-size: 2.3rem;
+            font-size: 2.5rem;
             font-weight: 900;
-            margin-bottom: 15px;
-            letter-spacing: -0.5px;
+            margin-bottom: 16px;
+            letter-spacing: -0.8px;
         }
 
         .final-cta-box p {
             color: var(--text-muted);
-            font-size: 1.1rem;
-            margin-bottom: 35px;
+            font-size: 1.12rem;
+            margin-bottom: 40px;
         }
 
         /* الفوتر */
         footer {
             text-align: center;
-            padding: 35px;
+            padding: 40px 20px;
             color: var(--text-muted);
-            font-size: 0.85rem;
-            border-top: 1px solid var(--border-card);
-            background: #000000;
+            font-size: 0.88rem;
+            border-top: 1px solid var(--border-color);
+            background: var(--bg-deep);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        footer img {
+            height: 28px;
+            width: auto;
+            opacity: 0.8;
         }
 
         footer span {
-            color: #ffffff;
+            color: var(--text-main);
             font-weight: 700;
         }
 
@@ -528,8 +548,8 @@
         @media (max-width: 900px) {
             .hero-section {
                 grid-template-columns: 1fr;
-                padding: 40px 5% 40px;
-                gap: 40px;
+                padding: 50px 5% 45px;
+                gap: 45px;
                 text-align: center;
             }
             .hero-content {
@@ -546,10 +566,10 @@
                 padding: 18px 5%;
             }
             .section-padding {
-                padding: 60px 5%;
+                padding: 70px 5%;
             }
             .final-cta-box {
-                padding: 40px 20px;
+                padding: 45px 25px;
             }
         }
     </style>
@@ -563,9 +583,9 @@
 
     <!-- الهيدر العصري -->
     <header>
-        <div class="logo">
-            <i class="fa-solid fa-chart-line"></i> Prime<span>Logic</span>
-        </div>
+        <a href="#" class="logo">
+            <img src="icona.png" alt="Prime Logic Logo"> Prime<span>Logic</span>
+        </a>
         <div class="header-actions">
             <a href="login.html" class="header-login-btn">تسجيل الدخول</a>
         </div>
@@ -603,7 +623,7 @@
                     <div class="live-dot"></div>
                     XAUUSD Feed: <span>$2,345.80</span>
                 </div>
-                <span style="font-size: 0.8rem; color: var(--text-muted);">تحديث فوري</span>
+                <span style="font-size: 0.82rem; color: var(--text-muted);">تحديث فوري</span>
             </div>
 
             <!-- إشارة تجريبية حية داخل الموك أب -->
@@ -763,8 +783,8 @@
             <h2>جاهز لتداول الذهب بثقة تامة؟</h2>
             <p>انضم الآن واستفد من أسبوع تجريبي مجاني لمتابعة توصيات الذهب الفورية ودون بطاقة بنكية.</p>
             <div style="display: flex; justify-content: center;">
-                <div style="width: 100%; max-width: 380px;">
-                    <a href="login.html" class="btn-primary-signup" style="padding: 18px 28px; font-size: 1.1rem;">
+                <div style="width: 100%; max-width: 400px;">
+                    <a href="login.html" class="btn-primary-signup" style="padding: 20px 32px; font-size: 1.12rem;">
                         <span>ابدأ أسبوعك التجريبي المجاني الآن</span>
                         <i class="fa-solid fa-arrow-left"></i>
                     </a>
@@ -775,6 +795,7 @@
 
     <!-- الفوتر -->
     <footer>
+        <img src="icona.png" alt="Prime Logic Logo">
         <p>جميع الحقوق محفوظة &copy; 2026 <span>Prime Logic</span> | نظام توصيات تداول الذهب</p>
     </footer>
 
@@ -798,4 +819,3 @@
 
 </body>
 </html>
-
