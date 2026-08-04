@@ -142,7 +142,7 @@
             </div>
         </div>
 
-        <p class="text-[10px] text-center text-gray-400">اسحب البانر (لأعلى، لليمين، أو لليسار) لإغلاقه 📡</p>
+        <p class="text-[10px] text-center text-gray-400">اسحب البانر (لأعلى، لليمين، أو ليسار) لإغلاقه 📡</p>
     </div>
 </div>
 
@@ -462,6 +462,48 @@
             };
         }
 
+        async function sendSignal(decisionText, confidence) {
+            if (decisionText !== "Strong Buy" && decisionText !== "Strong Sell") return;
+
+            const phone = localStorage.getItem("prime_user_phone");
+            if (!phone) return;
+
+            try {
+                const userDocSnap = await getDoc(doc(db, "users", phone));
+                if (!userDocSnap.exists()) return;
+                const userData = userDocSnap.data();
+
+                if (!userData.trial_end || userData.trial_end.toDate() <= new Date()) {
+                    return;
+                }
+
+                const lastSignal = localStorage.getItem("lastSignal");
+                if (lastSignal === decisionText) {
+                    return;
+                }
+
+                const message = `🚨 PRIME LOGIC\n\n📊 New Gold Signal\n\nSignal: ${decisionText}\n\nConfidence: ${confidence}\n\naffath Prime Logic lemouchahadat al-tahlil al-kamil.`;
+
+                const data = {
+                    token: "86j6ytdf0y9z6q1g",
+                    to: phone,
+                    body: message
+                };
+
+                await fetch("https://api.ultramsg.com/instance113406/messages/chat", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                localStorage.setItem("lastSignal", decisionText);
+            } catch (e) {
+                console.error("Error sending WhatsApp signal:", e);
+            }
+        }
+
         async function generateSignal() {
             if (isExpired) return;
 
@@ -536,6 +578,8 @@
                     accuracyEl.innerText = confidenceMap[score];
                     logSignal({t: decisionText, c: color});
                 }
+
+                await sendSignal(decisionText, confidenceMap[score]);
 
             } catch (error) {
                 console.error("Market Analysis Error:", error);
