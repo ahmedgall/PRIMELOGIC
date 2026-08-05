@@ -465,20 +465,35 @@
         async function sendSignal(decisionText, confidence) {
             if (decisionText !== "Strong Buy" && decisionText !== "Strong Sell") return;
 
-            const phone = localStorage.getItem("prime_user_phone");
-            if (!phone) return;
+            let phone = localStorage.getItem("prime_user_phone");
+            if (!phone) {
+                console.error("خطأ: لا يوجد رقم هاتف مسجل في التخزين المحلي.");
+                return;
+            }
+
+            phone = phone.replace(/^0/, "20");
 
             try {
-                const userDocSnap = await getDoc(doc(db, "users", phone));
-                if (!userDocSnap.exists()) return;
+                const userDocRef = doc(db, "users", localStorage.getItem("prime_user_phone"));
+                const userDocSnap = await getDoc(userDocRef);
+                if (!userDocSnap.exists()) {
+                    console.error("خطأ: بيانات المستخدم غير موجودة في قاعدة البيانات.");
+                    return;
+                }
                 const userData = userDocSnap.data();
 
                 if (!userData.trial_end || userData.trial_end.toDate() <= new Date()) {
+                    console.error("خطأ: انتهت صلاحية اشتراك المستخدم.");
                     return;
                 }
 
                 const lastSignal = localStorage.getItem("lastSignal");
-                if (lastSignal === decisionText) {
+                const lastSignalTime = localStorage.getItem("lastSignalTime");
+                const now = Date.now();
+                const fifteenMinutes = 15 * 60 * 1000;
+
+                if (lastSignal === decisionText && lastSignalTime && (now - parseInt(lastSignalTime) < fifteenMinutes)) {
+                    console.log("تم تجاهل الإشارة: نفس الإشارة تكررت خلال أقل من 15 دقيقة.");
                     return;
                 }
 
@@ -490,7 +505,7 @@
                     body: message
                 };
 
-                await fetch("https://api.ultramsg.com/instance113406/messages/chat", {
+                const response = await fetch("https://api.ultramsg.com/instance113406/messages/chat", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -498,9 +513,22 @@
                     body: JSON.stringify(data)
                 });
 
-                localStorage.setItem("lastSignal", decisionText);
-            } catch (e) {
-                console.error("Error sending WhatsApp signal:", e);
+                if (!response.ok) {
+                    throw new Error(`فشل الاتصال بـ API برمز الحالة: ${response.status}`);
+                }
+
+                const result = await response.json();
+                console.log("UltraMsg Response:", result);
+
+                if (result.success === true || result.sent === "true" || result.status === "success" || (result.id && !result.error)) {
+                    localStorage.setItem("lastSignal", decisionText);
+                    localStorage.setItem("lastSignalTime", now.toString());
+                } else {
+                    console.error("فشل إرسال الرسالة عبر UltraMsg API بالتفصيل:", result);
+                }
+
+            } catch (error) {
+                console.error("خطأ أثناء محاولة إرسال إشارة WhatsApp:", error);
             }
         }
 
